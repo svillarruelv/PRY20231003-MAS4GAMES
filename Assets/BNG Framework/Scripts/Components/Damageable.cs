@@ -95,13 +95,13 @@ namespace BNG {
         }
 
         public virtual void DealDamage(float damageAmount, Vector3? hitPosition = null, Vector3? hitNormal = null, bool reactToHit = true, GameObject sender = null, GameObject receiver = null) {
-
+            Enemy r = receiver.GetComponent<Enemy>();
+          
             if (destroyed) {
                 return;
             }
-            Debug.Log( Health.ToString());
+
             Health -= damageAmount;
-            Debug.Log( Health.ToString());
 
             onDamaged?.Invoke(damageAmount);
 
@@ -117,11 +117,9 @@ namespace BNG {
                 this.gameObject.ApplyDamage(new Invector.vDamage(d));
             }
 #endif
-
-            if (Health <= 0) {
-                Enemy r = receiver.GetComponent<Enemy>();
-                r.TriggerDeath();
-                //DestroyThis();
+            r.TakeDamage(Health);
+            if (Health <= 0) {        
+                DestroyThis();
             }
         }
 
