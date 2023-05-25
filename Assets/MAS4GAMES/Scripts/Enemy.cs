@@ -7,16 +7,21 @@ public class Enemy : MonoBehaviour
 
     private enum EnemyState{
         Walking,
-        Ragdoll
+        Ragdoll,
+        Dead
     }
 
     [SerializeField]
-    private Camera _camera;
+    private Camera _camera; //Variable de cámara del jugador
     
     private Rigidbody[] _ragdollRigidbodies;
     private EnemyState _currentState = EnemyState.Walking;
-    private Animator _animator;
+    private Animator _animator; //Variable para llamar al animador de Unity
     private CharacterController _characterController;
+
+    //Variables para el MAS
+    private bool isDead = false;
+    private float _health = 100; //Salud/Vida del jugador
     
     void Awake()
     {
@@ -40,6 +45,33 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void TriggerDeath()
+    {
+        _currentState = EnemyState.Dead;
+        _animator.SetBool("isDead", true); //Activar el trigger de la animación para la muerte
+
+        EnableRagdoll(); //Volverlo Ragdoll
+        Debug.Log("MUERE"); 
+
+        GetComponent<Collider>().enabled = false; //Desactivar las colisiones (colider)
+        this.enabled = false; //Desactivar el script
+
+
+    }
+
+    public void TakeDamage(float Health)
+    {
+        _health = Health;
+
+        if (_health > 0)
+        {
+            //Animación que recibe daño
+        } else
+        {
+            this.TriggerDeath();
+        }
+    }
+
     private void DisableRagdoll()
     {
         foreach (var rigidBody in _ragdollRigidbodies){
@@ -58,6 +90,9 @@ public class Enemy : MonoBehaviour
 
         _animator.enabled = false;
         _characterController.enabled = false;
+
+        Collider collider = GetComponent<Collider>();
+        Debug.Log(collider.enabled); 
     }
 
     private void WalkingBehaviour()

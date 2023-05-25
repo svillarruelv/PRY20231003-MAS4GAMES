@@ -99,8 +99,9 @@ namespace BNG {
             if (destroyed) {
                 return;
             }
-
+            Debug.Log( Health.ToString());
             Health -= damageAmount;
+            Debug.Log( Health.ToString());
 
             onDamaged?.Invoke(damageAmount);
 
@@ -118,7 +119,9 @@ namespace BNG {
 #endif
 
             if (Health <= 0) {
-                DestroyThis();
+                Enemy r = receiver.GetComponent<Enemy>();
+                r.TriggerDeath();
+                //DestroyThis();
             }
         }
 
