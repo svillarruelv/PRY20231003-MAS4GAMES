@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
         _currentState = EnemyState.Dead;
         _animator.SetBool("isDead", true); //Activar el trigger de la animación para la muerte
 
-        EnableRagdoll(); //Volverlo Ragdoll
+        //EnableRagdoll(); //Volverlo Ragdoll
         Debug.Log("MUERE"); 
 
         GetComponent<Collider>().enabled = false; //Desactivar las colisiones (colider)
@@ -66,6 +66,8 @@ public class Enemy : MonoBehaviour
         if (_health > 0)
         {
             //Animación que recibe daño
+            Debug.Log("HIT!");
+            _animator.SetTrigger("Hurt");
         } else
         {
             this.TriggerDeath();
