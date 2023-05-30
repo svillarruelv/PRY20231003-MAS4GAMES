@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     private enum EnemyState{
         Walking,
         Ragdoll,
+        Attack,
         Dead
     }
 
@@ -23,7 +24,7 @@ public class Enemy : MonoBehaviour
     private bool isDead = false;
     private float _health = 100; //Salud/Vida del jugador
     private int id; //ID del enemigo
-    public float AttackRange = 3f; //Rango de ataque
+    public float AttackRange = 1f; //Rango de ataque
     
     void Awake()
     {
@@ -43,6 +44,9 @@ public class Enemy : MonoBehaviour
                 break;
             case EnemyState.Ragdoll:
                 RagdollBehaviour();
+                break;
+            case EnemyState.Attack:
+                AttackBehaviour();
                 break;
         }
     }
@@ -110,6 +114,13 @@ public class Enemy : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 100 * Time.deltaTime);
 
 
+        if (Vector3.Distance(_camera.transform.position, transform.position) <= AttackRange)
+		{
+			_animator.SetTrigger("Attack");
+            _currentState = EnemyState.Attack;
+            Debug.Log("PLAYER ATTACKED!");
+		}
+
         if(Input.GetKeyDown(KeyCode.Space)){
             EnableRagdoll();
             _currentState = EnemyState.Ragdoll;
@@ -124,5 +135,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    
+    public void AttackBehaviour()
+    {   
+        Debug.Log("ATTACK BEHAVIOUR");
+        _animator.ResetTrigger("Attack");
+        /*  if (Vector3.Distance(_camera.transform.position, transform.position) >= AttackRange)
+		{ */
+        _currentState = EnemyState.Walking;
+        
+    }
 }
