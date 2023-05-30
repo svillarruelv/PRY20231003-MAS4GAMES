@@ -124,15 +124,5 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    //Attack function
-    public void Attack() 
-    {
-        //Validate attack range from player
-
-
-        //Set animation trigger
-         Debug.Log("PLAYER ATTACKED!");
-
-
-    }
+    
 }
