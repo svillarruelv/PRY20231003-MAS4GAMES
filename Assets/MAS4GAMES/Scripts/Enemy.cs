@@ -137,6 +137,13 @@ public class Enemy : MonoBehaviour
 
     public void AttackBehaviour()
     {   
+        Vector3 direction = _camera.transform.position - transform.position;
+        direction.y = 0;
+        direction.Normalize();
+
+        Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+        transform.rotation = toRotation;//Quaternion.RotateTowards(transform.rotation, toRotation, Time.deltaTime);
+
         Debug.Log("ATTACK BEHAVIOUR");
         _animator.ResetTrigger("Attack");
         /*  if (Vector3.Distance(_camera.transform.position, transform.position) >= AttackRange)
