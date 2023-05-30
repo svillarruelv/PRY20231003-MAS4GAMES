@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     }
 
     [SerializeField]
-    private Camera _camera; //Variable de cámara del jugador
+    private Camera _camera; //Variable de cï¿½mara del jugador
     
     private Rigidbody[] _ragdollRigidbodies;
     private EnemyState _currentState = EnemyState.Walking;
@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour
     //Variables para el MAS
     private bool isDead = false;
     private float _health = 100; //Salud/Vida del jugador
+    private int id; //ID del enemigo
     
     void Awake()
     {
@@ -48,7 +49,7 @@ public class Enemy : MonoBehaviour
     public void TriggerDeath()
     {
         _currentState = EnemyState.Dead;
-        _animator.SetBool("isDead", true); //Activar el trigger de la animación para la muerte
+        _animator.SetBool("isDead", true); //Activar el trigger de la animaciï¿½n para la muerte
 
         //EnableRagdoll(); //Volverlo Ragdoll
         Debug.Log("MUERE"); 
@@ -65,7 +66,7 @@ public class Enemy : MonoBehaviour
 
         if (_health > 0)
         {
-            //Animación que recibe daño
+            //Animaciï¿½n que recibe daï¿½o
             Debug.Log("HIT!");
             _animator.SetTrigger("Hurt");
         } else
