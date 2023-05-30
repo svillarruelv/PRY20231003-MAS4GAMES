@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour
     private bool isDead = false;
     private float _health = 100; //Salud/Vida del jugador
     private int id; //ID del enemigo
+    public float AttackRange = 3f; //Rango de ataque
     
     void Awake()
     {
@@ -46,6 +47,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    //Death Function (Activates trigger)
     public void TriggerDeath()
     {
         _currentState = EnemyState.Dead;
@@ -120,5 +122,17 @@ public class Enemy : MonoBehaviour
             DisableRagdoll();
             _currentState = EnemyState.Walking;
         }
+    }
+
+    //Attack function
+    public void Attack() 
+    {
+        //Validate attack range from player
+
+
+        //Set animation trigger
+         Debug.Log("PLAYER ATTACKED!");
+
+
     }
 }
