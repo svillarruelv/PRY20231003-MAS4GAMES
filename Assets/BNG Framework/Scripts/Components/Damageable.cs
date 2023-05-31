@@ -101,8 +101,18 @@ namespace BNG {
             if (destroyed) {
                 return;
             }
+            string log_type = "Type: " + _type;
+            Debug.Log(log_type);
 
+            string damage_log = "DamageAmount: " + damageAmount.ToString();
+            Debug.Log(damage_log);
+
+            string log = "Health before damage: " + Health.ToString();
+            Debug.Log(log);
             Health -= damageAmount;
+            
+            log = "Health - damageAmount= " + Health.ToString();
+            Debug.Log(log);
 
             onDamaged?.Invoke(damageAmount);
 
@@ -120,6 +130,14 @@ namespace BNG {
 #endif
             if(_type == "Enemy"){
                 var modelComponent = receiver.GetComponent<Enemy>();
+                string logg = "Enemy's health after damage: " + Health.ToString();
+                Debug.Log(logg);
+                modelComponent.TakeDamage(Health);
+            }
+
+            if(_type == "Player") {
+                Debug.Log("Player receives damage");
+                var modelComponent = receiver.GetComponent<Player>();
                 modelComponent.TakeDamage(Health);
             }
 

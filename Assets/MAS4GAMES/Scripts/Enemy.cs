@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
         Ragdoll,
         Attack,
         Dead
-    }
+    };
 
     [SerializeField]
     private Camera _camera; //Variable de c�mara del jugador
@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
     private bool isDead = false;
     private float _health = 100; //Salud/Vida del jugador
     private int id; //ID del enemigo
-    public float AttackRange = 1f; //Rango de ataque
+    private float _attackRange = 2f; //Rango de ataque
     
     void Awake()
     {
@@ -49,6 +49,11 @@ public class Enemy : MonoBehaviour
                 AttackBehaviour();
                 break;
         }
+
+        Vector3 tmpPos = transform.position;
+        tmpPos.y = 0;
+        transform.position = tmpPos;
+        
     }
 
     //Death Function (Activates trigger)
@@ -101,30 +106,24 @@ public class Enemy : MonoBehaviour
         _characterController.enabled = false;
 
         Collider collider = GetComponent<Collider>();
-        Debug.Log(collider.enabled); 
     }
 
     private void WalkingBehaviour()
     {
+        float distance = Vector3.Distance(_camera.transform.position, transform.position);
         Vector3 direction = _camera.transform.position - transform.position;
         direction.y = 0;
         direction.Normalize();
 
-        Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 100 * Time.deltaTime);
-
-
-        if (Vector3.Distance(_camera.transform.position, transform.position) <= AttackRange)
-		{
-			_animator.SetTrigger("Attack");
+        if (distance >= this._attackRange){
+            Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 10000 * Time.deltaTime);
+		} else {
+            _animator.SetTrigger("Attack");
             _currentState = EnemyState.Attack;
-            Debug.Log("PLAYER ATTACKED!");
-		}
-
-        if(Input.GetKeyDown(KeyCode.Space)){
-            EnableRagdoll();
-            _currentState = EnemyState.Ragdoll;
+            Debug.Log("ENEMY STARTS ATTACK!");
         }
+        
     }
 
     private void RagdollBehaviour()
@@ -137,18 +136,18 @@ public class Enemy : MonoBehaviour
 
     public void AttackBehaviour()
     {   
+        float distance = Vector3.Distance(_camera.transform.position, transform.position);
         Vector3 direction = _camera.transform.position - transform.position;
         direction.y = 0;
         direction.Normalize();
 
         Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
         transform.rotation = toRotation;//Quaternion.RotateTowards(transform.rotation, toRotation, Time.deltaTime);
-
-        Debug.Log("ATTACK BEHAVIOUR");
-        _animator.ResetTrigger("Attack");
-        /*  if (Vector3.Distance(_camera.transform.position, transform.position) >= AttackRange)
-		{ */
-        _currentState = EnemyState.Walking;
         
+        _animator.ResetTrigger("Attack");
+
+        if (distance >= this._attackRange){
+            _currentState = EnemyState.Walking;
+        }
     }
 }
