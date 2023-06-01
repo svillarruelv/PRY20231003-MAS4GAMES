@@ -50,7 +50,7 @@ public class MovementController : MonoBehaviour
 
     void Update()
     {
-        Transform cameraTransform = _camera.transform;
+        /* Transform cameraTransform = _camera.transform;
         Vector3 cameraPosition = cameraTransform.position;
         cameraPosition.y = 0;
         Quaternion cameraRotation = cameraTransform.rotation;
@@ -58,7 +58,7 @@ public class MovementController : MonoBehaviour
         characterController.enabled = false;
         characterController.transform.position = cameraPosition;
         characterController.transform.rotation = cameraRotation;
-        characterController.enabled = true;
+        characterController.enabled = true; */
 
         if (characterController.isGrounded)
         {
