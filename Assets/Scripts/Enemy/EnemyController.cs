@@ -25,7 +25,7 @@ public class EnemyController : MonoBehaviour
         enemyAnimator = GetComponent<Animator>();
 
         //small values for eisier testing
-        enemyStats.health = 50;
+        enemyStats.health = 100;
         damage = 10;
 
         healthBar.maxValue = enemyStats.health;
