@@ -33,19 +33,12 @@ public class MovementController : MonoBehaviour
     [SerializeField]
     private Camera _camera; //Variable de c�mara del jugador
 
-    private SkinnedMeshRenderer[] skinnedMeshRenderers;
-
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         characterAnimator = GetComponent<Animator>();
         inventory = GetComponent<InventoryManager>();
-        skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
 
-        foreach (SkinnedMeshRenderer smr in skinnedMeshRenderers)
-        {
-            smr.enabled = false;
-        }
     }
 
     void Update()
