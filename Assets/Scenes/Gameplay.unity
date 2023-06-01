@@ -17066,7 +17066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ControllerType: 0
-  MovementSpeed: 5
+  MovementSpeed: 4
   MovementForce: 500
   MaxHorizontalVelocity: 5
   MaxVerticalVelocity: 10
@@ -17084,13 +17084,13 @@ MonoBehaviour:
   MoveAction: {fileID: 6972639530819350904, guid: e39f4b35a6db18348b41eb0262520e69,
     type: 3}
   RequireAppFocus: 1
-  SprintSpeed: 1.5
+  SprintSpeed: 5
   SprintInput: 00000000
   SprintAction: {fileID: -9014867403852775025, guid: e39f4b35a6db18348b41eb0262520e69,
     type: 3}
-  StrafeSpeed: 1
-  StrafeSprintSpeed: 1.25
-  JumpForce: 3
+  StrafeSpeed: 4
+  StrafeSprintSpeed: 5
+  JumpForce: 5
   JumpInput: 00000000
   JumpAction: {fileID: 3598031526004978682, guid: e39f4b35a6db18348b41eb0262520e69,
     type: 3}
