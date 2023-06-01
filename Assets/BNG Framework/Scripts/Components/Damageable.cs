@@ -15,9 +15,6 @@ namespace BNG {
         public float Health = 100;
         private float _startingHealth;
 
-        [SerializeField]
-        private string _type; //Variable de c�mara del jugador
-
         [Tooltip("If specified, this GameObject will be instantiated at this transform's position on death.")]
         public GameObject SpawnOnDeath;
 
@@ -98,21 +95,12 @@ namespace BNG {
         }
 
         public virtual void DealDamage(float damageAmount, Vector3? hitPosition = null, Vector3? hitNormal = null, bool reactToHit = true, GameObject sender = null, GameObject receiver = null) {
+
             if (destroyed) {
                 return;
             }
-            string log_type = "Type: " + _type;
-            Debug.Log(log_type);
 
-            string damage_log = "DamageAmount: " + damageAmount.ToString();
-            Debug.Log(damage_log);
-
-            string log = "Health before damage: " + Health.ToString();
-            Debug.Log(log);
             Health -= damageAmount;
-            
-            log = "Health - damageAmount= " + Health.ToString();
-            Debug.Log(log);
 
             onDamaged?.Invoke(damageAmount);
 
@@ -128,20 +116,8 @@ namespace BNG {
                 this.gameObject.ApplyDamage(new Invector.vDamage(d));
             }
 #endif
-            if(_type == "Enemy"){
-                var modelComponent = receiver.GetComponent<Enemy>();
-                string logg = "Enemy's health after damage: " + Health.ToString();
-                Debug.Log(logg);
-                modelComponent.TakeDamage(Health);
-            }
 
-            if(_type == "Player") {
-                Debug.Log("Player receives damage");
-                var modelComponent = receiver.GetComponent<Player>();
-                modelComponent.TakeDamage(Health);
-            }
-
-            if (Health <= 0) {        
+            if (Health <= 0) {
                 DestroyThis();
             }
         }
