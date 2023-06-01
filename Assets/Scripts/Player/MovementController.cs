@@ -30,31 +30,52 @@ public class MovementController : MonoBehaviour
     private GameObject hand;
     [NonSerialized]
     public GameObject availableItem = null;
+    [SerializeField]
+    private Camera _camera; //Variable de c�mara del jugador
+
+    private SkinnedMeshRenderer[] skinnedMeshRenderers;
 
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         characterAnimator = GetComponent<Animator>();
-
         inventory = GetComponent<InventoryManager>();
+        skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        foreach (SkinnedMeshRenderer smr in skinnedMeshRenderers)
+        {
+            smr.enabled = false;
+        }
     }
 
     void Update()
     {
+        Transform cameraTransform = _camera.transform;
+        Vector3 cameraPosition = cameraTransform.position;
+        cameraPosition.y = 0;
+        Quaternion cameraRotation = cameraTransform.rotation;
+
+        characterController.enabled = false;
+        characterController.transform.position = cameraPosition;
+        characterController.transform.rotation = cameraRotation;
+        characterController.enabled = true;
+
         if (characterController.isGrounded)
         {
-            Vector3 forward = transform.TransformDirection(Vector3.forward);
+            /* Vector3 forward = transform.TransformDirection(Vector3.forward);
             Vector3 right = transform.TransformDirection(Vector3.right);
 
             inputX = Input.GetAxis("Vertical");
             inputZ = Input.GetAxis("Horizontal");
-            direction = (forward * inputX * movementSpeed) + (right * inputZ * movementSpeed);
+            direction = (forward * inputX * movementSpeed) + (right * inputZ * movementSpeed); */
 
-            if (Input.GetKeyDown(KeyCode.Space) && canMove)
+            
+
+            /* if (Input.GetKeyDown(KeyCode.Space) && canMove)
             {
                 characterAnimator.SetBool("isJumping", true);
                 direction.y = jumpSpeed;
-            }
+            } */
         }
 
         if (Input.GetKeyDown(KeyCode.E) && availableItem && canMove)
@@ -68,12 +89,12 @@ public class MovementController : MonoBehaviour
 
         direction.y -= gravity * Time.deltaTime;
 
-        if (canMove)
+    /*  if (canMove)
         {
             characterController.Move(direction * Time.deltaTime);
             AnimateMovement();
-        }
-    }
+        }*/
+    } 
 
     private void Pick(GameObject itemToPick)
     {
@@ -117,7 +138,7 @@ public class MovementController : MonoBehaviour
         float directionX = Vector3.Dot(direction.normalized, transform.right);
         float directionZ = Vector3.Dot(direction.normalized, transform.forward);
 
-        characterAnimator.SetFloat("directionX", directionX, 0.1f, Time.deltaTime);
-        characterAnimator.SetFloat("directionZ", directionZ, 0.1f, Time.deltaTime);
+        /*characterAnimator.SetFloat("directionX", directionX, 0.1f, Time.deltaTime);
+        characterAnimator.SetFloat("directionZ", directionZ, 0.1f, Time.deltaTime); */
     }
 }
