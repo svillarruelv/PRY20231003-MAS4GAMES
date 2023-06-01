@@ -102,11 +102,16 @@ public class CombatController : MonoBehaviour
             healthBar.value -= damage;
             playerStats.health -= damage;
             movementController.characterAnimator.SetBool("isHit", true);
+            
+            string content = "Player receives damage";
+            //FileManager.Instance.WriteFile(content);
 
             if (playerStats.health <= 0)
             {
                 movementController.characterAnimator.SetBool("isDead", true);
 
+                content = "Player is dead";
+                //FileManager.Instance.WriteFile(content);
                 CanvasManager.instance.Wasted();
 
                 GetComponent<CameraMovement>().enabled = false;

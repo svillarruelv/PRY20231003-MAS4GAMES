@@ -7,11 +7,14 @@ public class CanvasManager : MonoBehaviour
 {
     public static CanvasManager instance;
 
+    //public FileManager _fileManager;
+
     [SerializeField]
     private GameObject image;
     
     void Awake()
     {
+        FileManager.Instance.CreateFile();
         if (instance)
         {
             Destroy(instance);
