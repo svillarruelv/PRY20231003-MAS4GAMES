@@ -7924,6 +7924,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Katana 2H
       objectReference: {fileID: 0}
+    - target: {fileID: 2829697581920416870, guid: 4b060d28a0db4a64f8f081d3d059f0f8,
+        type: 3}
+      propertyPath: Damage
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829697581920416870, guid: 4b060d28a0db4a64f8f081d3d059f0f8,
+        type: 3}
+      propertyPath: MinForce
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2829697581920416874, guid: 4b060d28a0db4a64f8f081d3d059f0f8,
         type: 3}
       propertyPath: m_RootOrder
