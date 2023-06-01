@@ -17,17 +17,17 @@ public class CameraMovement : MonoBehaviour
 
     void Start()
     {
-        rotation.x = transform.eulerAngles.x;
-        rotation.y = transform.eulerAngles.y;
+        //rotation.x = transform.eulerAngles.x;
+        //rotation.y = transform.eulerAngles.y;
     }
 
     void Update()
     {
-        rotation.x += -Input.GetAxis("Mouse Y") * verticalSpeed;
-        rotation.y += Input.GetAxis("Mouse X") * horizontalSpeed;
-        rotation.x = Mathf.Clamp(rotation.x, -lookingLimit, lookingLimit);
+        //rotation.x += -Input.GetAxis("Mouse Y") * verticalSpeed;
+        //rotation.y += Input.GetAxis("Mouse X") * horizontalSpeed;
+        //rotation.x = Mathf.Clamp(rotation.x, -lookingLimit, lookingLimit);
 
-        playerCamera.localRotation = Quaternion.Euler(rotation.x, 0, 0);
-        transform.eulerAngles = new Vector2(0, rotation.y);
+        //playerCamera.localRotation = Quaternion.Euler(rotation.x, 0, 0);
+        //transform.eulerAngles = new Vector2(0, rotation.y);
     }
 }
