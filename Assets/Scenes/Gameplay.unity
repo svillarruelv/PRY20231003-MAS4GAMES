@@ -1993,7 +1993,7 @@ Transform:
   m_Children:
   - {fileID: 1424209848}
   - {fileID: 727393730}
-  - {fileID: 1940498227}
+  - {fileID: 7948651370332242930}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9191,12 +9191,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 881022847667941538, guid: 9bf6018d1335b0e47a3c20da159f235d,
     type: 3}
   m_PrefabInstance: {fileID: 1444123691941921547}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1940498227 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7948651370056639672, guid: addaf8336d2dd95458615aa770c63c22,
-    type: 3}
-  m_PrefabInstance: {fileID: 397846346}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1959151762
 PrefabInstance:
@@ -18285,6 +18279,18 @@ Transform:
   m_Father: {fileID: 7036507930400280393}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &7948651370332242930 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7948651370056639672, guid: addaf8336d2dd95458615aa770c63c22,
+    type: 3}
+  m_PrefabInstance: {fileID: 397846346}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7948651370332470802 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7948651370056259928, guid: addaf8336d2dd95458615aa770c63c22,
+    type: 3}
+  m_PrefabInstance: {fileID: 397846346}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7993825084952210231
 GameObject:
   m_ObjectHideFlags: 0
@@ -18585,6 +18591,93 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 16, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8412534131744633169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7948651370332470802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BeingHeld: 0
+  GrabButton: 2
+  Grabtype: 2
+  GrabPhysics: 4
+  GrabMechanic: 1
+  GrabSpeed: 15
+  RemoteGrabbable: 0
+  RemoteGrabMechanic: 0
+  RemoteGrabDistance: 2
+  ThrowForceMultiplier: 2
+  ThrowForceMultiplierAngular: 1.5
+  BreakDistance: 0
+  HideHandGraphics: 0
+  ParentToHands: 0
+  ParentHandModel: 1
+  SnapHandModel: 1
+  CanBeDropped: 1
+  CanBeSnappedToSnapZone: 1
+  ForceDisableKinematicOnDrop: 0
+  InstantMovement: 0
+  MakeChildCollidersGrabbable: 0
+  handPoseType: 1
+  SelectedHandPose: {fileID: 0}
+  CustomHandPose: 0
+  SecondaryGrabBehavior: 0
+  TwoHandedPosition: 0
+  TwoHandedPostionLerpAmount: 0.5
+  TwoHandedRotation: 1
+  TwoHandedRotationLerpAmount: 0.5
+  TwoHandedDropBehavior: 0
+  TwoHandedLookVector: 0
+  SecondHandLookSpeed: 40
+  SecondaryGrabbable: {fileID: 0}
+  OtherGrabbableMustBeGrabbed: {fileID: 0}
+  CollisionSpring: 3000
+  CollisionSlerp: 500
+  CollisionLinearMotionX: 2
+  CollisionLinearMotionY: 2
+  CollisionLinearMotionZ: 2
+  CollisionAngularMotionX: 2
+  CollisionAngularMotionY: 2
+  CollisionAngularMotionZ: 2
+  ApplyCorrectiveForce: 1
+  MoveVelocityForce: 3000
+  MoveAngularVelocityForce: 90
+  LastGrabTime: 0
+  LastDropTime: 0
+  AddControllerVelocityOnDrop: 1
+  collisions: []
+  ActiveGrabPoint: {fileID: 0}
+  SecondaryLookOffset: {x: 0, y: 0, z: 0}
+  SecondaryLookAtTransform: {fileID: 0}
+  LocalOffsetTransform: {fileID: 0}
+  GrabPoints: []
+  UseCustomInspector: 1
+  lastFlickTime: 0
+  FlickForce: 1
+--- !u!114 &8412534131744633170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7948651370332470802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a036c8df18de3a43ae55fc7324cd812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HighlightOnGrabbable: 1
+  HighlightOnRemoteGrabbable: 1
+  LineToDraw: {fileID: 0}
+  SegmentCount: 100
+  LerpAmount: 0.5
+  HeightAdjustment: 0.5
 --- !u!4 &8429352198246071003
 Transform:
   m_ObjectHideFlags: 0
