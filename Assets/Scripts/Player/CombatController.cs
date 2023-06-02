@@ -113,8 +113,6 @@ public class CombatController : MonoBehaviour
         content = "Player is dead";
         FileManager.Instance.WriteFile(content);
         CanvasManager.instance.Wasted();
-
-        GetComponent<CameraMovement>().enabled = false;
       }
     }
   }
