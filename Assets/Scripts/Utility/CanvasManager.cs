@@ -5,40 +5,37 @@ using UnityEngine.SceneManagement;
 
 public class CanvasManager : MonoBehaviour
 {
-    public static CanvasManager instance;
+  public static CanvasManager instance;
 
-    //public FileManager _fileManager;
+  [SerializeField]
+  private GameObject image;
 
-    [SerializeField]
-    private GameObject image;
-    
-    void Awake()
+  void Awake()
+  {
+    if (instance)
     {
-        FileManager.Instance.CreateFile();
-        if (instance)
-        {
-            Destroy(instance);
-        }
-        else
-        {
-            instance = this;
-        }
+      Destroy(instance);
     }
-
-    public void Wasted()
+    else
     {
-        image.SetActive(true);
-
-        Time.timeScale = 0.2f;
-
-        StartCoroutine(Utility.TimedEvent(() =>
-        {
-            SceneLoading(0);
-        }, 0.8f)); 
+      instance = this;
     }
+  }
 
-    public void SceneLoading(int index)
+  public void Wasted()
+  {
+    image.SetActive(true);
+
+    Time.timeScale = 0.2f;
+
+    StartCoroutine(Utility.TimedEvent(() =>
     {
-        SceneManager.LoadScene(index);
-    }
+      SceneLoading(0);
+    }, 0.8f));
+  }
+
+  public void SceneLoading(int index)
+  {
+    SceneManager.LoadScene(index);
+  }
 }

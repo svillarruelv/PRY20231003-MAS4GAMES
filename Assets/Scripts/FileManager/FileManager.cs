@@ -5,57 +5,70 @@ using System.Threading;
 
 public class FileManager : MonoBehaviour
 {
-    private static FileManager instance;
-    public static FileManager Instance => instance;
+  private static FileManager instance;
+  public static FileManager Instance => instance;
 
-    public string FileName; 
-    public string FilePath;
-    private string FilePathIncomplete = @"\PRY20231003-MAS4GAMES\Assets\MAS4GAMES\Logs";
+  public string FileName;
+  public string FilePath;
+  private string FilePathIncomplete = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MAS_LOGS");
 
-    private Mutex fileMutex;
+  private Mutex fileMutex;
 
-    private void Awake()
+  private void Awake()
+  {
+    if (instance)
     {
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
-        fileMutex = new Mutex();
+      Destroy(gameObject);
+    }
+    else
+    {
+      instance = this;
+      instance.CreateFile();
+      DontDestroyOnLoad(gameObject);
     }
 
-    public void CreateFile()
-    {
-        DateTime datetime = DateTime.Now;
-        string name = "Partida " + datetime.ToString() + ".txt";
-        FileName = name;
-        string a = "Archivo se creó con el nombre: " + FileName;
-        Debug.Log(a);
+    fileMutex = new Mutex();
+  }
 
-        FilePath = Path.Combine(FilePathIncomplete, FileName);
-        a = "Filepath: " + FilePath;
-        Debug.Log(a);
-    }
 
-    public void WriteFile(string content)
+  public static void Initialize()
+  {
+    if (instance == null)
     {
-        fileMutex.WaitOne(); // Espera hasta que se obtenga el bloqueo
-        try
-        {
-            Directory.CreateDirectory(FilePath);
-            using (StreamWriter writer = new StreamWriter(FilePath))
-            {
-                writer.Write(content);
-            }
-        }
-        finally
-        {
-            fileMutex.ReleaseMutex(); // Libera el bloqueo
-        }
+      GameObject fileManagerObject = new GameObject("FileManager");
+      instance = fileManagerObject.AddComponent<FileManager>();
     }
+  }
+
+
+  public void CreateFile()
+  {
+    DateTime now = DateTime.Now;
+    string fileName = string.Format("replay_{0:D2}_{1:D2}_{2:D2}{3:D2}.json", now.Day, now.Month, now.Hour, now.Minute);
+    FileName = fileName;
+    string logMessage = "Archivo se creÃ³ con el nombre: " + FileName;
+    Debug.Log(logMessage);
+
+    FilePath = Path.Combine(FilePathIncomplete, FileName);
+    logMessage = "Filepath: " + FilePath;
+    Debug.Log(logMessage);
+  }
+
+
+  public void WriteFile(string content)
+  {
+    fileMutex.WaitOne();
+    try
+    {
+      Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+      using (StreamWriter writer = new StreamWriter(FilePath))
+      {
+        writer.Write(content);
+      }
+    }
+    finally
+    {
+      fileMutex.ReleaseMutex();
+    }
+  }
 }

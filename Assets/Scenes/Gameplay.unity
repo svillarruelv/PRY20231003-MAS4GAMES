@@ -2076,7 +2076,7 @@ CanvasRenderer:
   m_CullTransparentMesh: 1
 --- !u!95 &271051463
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2093,7 +2093,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &271374856
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4815,6 +4816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
@@ -5262,8 +5264,8 @@ GameObject:
   - component: {fileID: 1140462757}
   - component: {fileID: 1140462756}
   - component: {fileID: 1140462755}
-  - component: {fileID: 1140462759}
   - component: {fileID: 1140462760}
+  - component: {fileID: 1140462759}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -19103,7 +19105,7 @@ CharacterController:
   m_Center: {x: 0, y: -0.25, z: 0}
 --- !u!95 &9166498489932061007
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -19120,7 +19122,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &9166498489932061008
 MonoBehaviour:
   m_ObjectHideFlags: 0

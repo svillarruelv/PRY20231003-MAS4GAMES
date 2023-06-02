@@ -5,117 +5,117 @@ using UnityEngine.UI;
 
 public class CombatController : MonoBehaviour
 {
-    public StatsData playerStats = new StatsData();
+  public StatsData playerStats = new StatsData();
 
-    private MovementController movementController;
+  private MovementController movementController;
 
-    [NonSerialized]
-    public GameObject enemy = null;
+  [NonSerialized]
+  public GameObject enemy = null;
 
-    [NonSerialized]
-    public GameObject weaponInHands = null;
+  [NonSerialized]
+  public GameObject weaponInHands = null;
 
-    [NonSerialized]
-    public float range;
-    [NonSerialized]
-    public int damage;
-    [NonSerialized]
-    public int defaultDamage = 2;
-    [NonSerialized]
-    public float defaultRange = 1.5f;
+  [NonSerialized]
+  public float range;
+  [NonSerialized]
+  public int damage;
+  [NonSerialized]
+  public int defaultDamage = 2;
+  [NonSerialized]
+  public float defaultRange = 1.5f;
 
-    public Slider healthBar;
+  public Slider healthBar;
 
-    void Start()
+  void Start()
+  {
+    damage = defaultDamage;
+    range = defaultDamage;
+
+    healthBar.maxValue = playerStats.health;
+    healthBar.value = playerStats.health;
+
+    movementController = GetComponent<MovementController>();
+  }
+
+  void Update()
+  {
+    if (Input.GetMouseButtonDown(0) && GetComponent<MovementController>().canMove)
     {
-        damage = defaultDamage;
-        range = defaultDamage;
+      Attack();
+    }
+    if (Input.GetMouseButton(1))
+    {
+      Block();
+    }
+    else if (Input.GetMouseButtonUp(1))
+    {
+      movementController.canMove = true;
+      movementController.characterAnimator.SetBool("isBlocking", false);
+    }
+  }
 
-        healthBar.maxValue = playerStats.health;
-        healthBar.value = playerStats.health;
+  private void Attack()
+  {
+    movementController.canMove = false;
+    movementController.characterAnimator.SetBool("isAttacking", true);
 
-        movementController = GetComponent<MovementController>();
+    if (weaponInHands)
+    {
+      range = weaponInHands.GetComponent<WeaponController>().weaponData.range;
+      damage = weaponInHands.GetComponent<WeaponController>().weaponData.damage;
     }
 
-    void Update()
+    if (weaponInHands && weaponInHands.GetComponent<ShootingSystem>())
     {
-        if (Input.GetMouseButtonDown(0) && GetComponent<MovementController>().canMove)
-        {
-            Attack();
-        }
-        if (Input.GetMouseButton(1))
-        {
-            Block();
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            movementController.canMove = true;
-            movementController.characterAnimator.SetBool("isBlocking", false);
-        }
+      weaponInHands.GetComponent<ShootingSystem>().Shoot();
     }
-
-    private void Attack()
+    else if (enemy)
     {
-        movementController.canMove = false;
-        movementController.characterAnimator.SetBool("isAttacking", true);
-        
-        if (weaponInHands)
-        {
-            range = weaponInHands.GetComponent<WeaponController>().weaponData.range;
-            damage = weaponInHands.GetComponent<WeaponController>().weaponData.damage;
-        }
-
-        if (weaponInHands && weaponInHands.GetComponent<ShootingSystem>())
-        {
-            weaponInHands.GetComponent<ShootingSystem>().Shoot();
-        }
-        else if (enemy)
-        {
-            if (Vector3.Distance(transform.position, enemy.transform.position) <= range)
-            {
-                StartCoroutine(Utility.TimedEvent(() =>
-                {
-                    if (enemy)
-                    {
-                        enemy.GetComponent<EnemyController>().TakeDamage(damage);
-                    }
-                }, 1f));
-            }
-        }
-
+      if (Vector3.Distance(transform.position, enemy.transform.position) <= range)
+      {
         StartCoroutine(Utility.TimedEvent(() =>
         {
-            GetComponent<MovementController>().canMove = true;
-        }, 1.5f));
+          if (enemy)
+          {
+            enemy.GetComponent<EnemyController>().TakeDamage(damage);
+          }
+        }, 1f));
+      }
     }
 
-    private void Block()
+    StartCoroutine(Utility.TimedEvent(() =>
     {
-        movementController.canMove = false;
-        movementController.characterAnimator.SetBool("isBlocking", true);
-    }
+      GetComponent<MovementController>().canMove = true;
+    }, 1.5f));
+  }
 
-    public void TakeDamage(int damage)
+  private void Block()
+  {
+    movementController.canMove = false;
+    movementController.characterAnimator.SetBool("isBlocking", true);
+  }
+
+  public void TakeDamage(int damage)
+  {
+    if (!movementController.characterAnimator.GetBool("isBlocking"))
     {
-        if (!movementController.characterAnimator.GetBool("isBlocking"))
-        {
-            healthBar.value -= damage;
-            playerStats.health -= damage;
-            movementController.characterAnimator.SetBool("isHit", true);
-            
-            string content = "Player receives damage";
-            //FileManager.Instance.WriteFile(content);
+      healthBar.value -= damage;
+      playerStats.health -= damage;
+      movementController.characterAnimator.SetBool("isHit", true);
 
-            if (playerStats.health <= 0)
-            {
-                movementController.characterAnimator.SetBool("isDead", true);
+      string content = "Player receives damage";
+      FileManager.Instance.WriteFile(content);
 
-                content = "Player is dead";
-                //FileManager.Instance.WriteFile(content);
-                CanvasManager.instance.Wasted();
+      if (playerStats.health <= 0)
+      {
+        movementController.characterAnimator.SetBool("isDead", true);
 
-                GetComponent<CameraMovement>().enabled = false;
-            }
-        }
+        content = "Player is dead";
+        FileManager.Instance.WriteFile(content);
+        CanvasManager.instance.Wasted();
+
+        GetComponent<CameraMovement>().enabled = false;
+      }
     }
+  }
 }
