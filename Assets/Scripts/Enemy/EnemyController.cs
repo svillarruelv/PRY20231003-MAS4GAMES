@@ -64,7 +64,10 @@ public class EnemyController : MonoBehaviour
 
     StartCoroutine(Utility.TimedEvent(() =>
     {
-      playerToHit.GetComponent<CombatController>().TakeDamage(damage);
+      if (Vector3.Distance(transform.position, player.transform.position) <= attackRange + 1)
+      {
+        playerToHit.GetComponent<CombatController>().TakeDamage(damage);
+      }
     }, 1f));
 
     StartCoroutine(Utility.TimedEvent(() =>
