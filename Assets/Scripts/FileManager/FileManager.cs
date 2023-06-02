@@ -60,10 +60,9 @@ public class FileManager : MonoBehaviour
     fileMutex.WaitOne();
     try
     {
-      Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
-      using (StreamWriter writer = new StreamWriter(FilePath))
+      using (StreamWriter writer = new StreamWriter(FilePath, true)) // Utiliza el parámetro 'append' en 'true' para agregar al archivo existente
       {
-        writer.Write(content);
+        writer.WriteLine(content); // Agrega una nueva línea al archivo
       }
     }
     finally
