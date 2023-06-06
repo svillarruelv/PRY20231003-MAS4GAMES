@@ -104,7 +104,7 @@ public class FileManager : MonoBehaviour
     string accuracy = characterData.GetAccuracy().ToString();
     string opp_accuracy = opponentData.GetAccuracy().ToString();
 
-    content = $"{id},{type},{action},{outcome},{health},{accuracy},{opp_accuracy},{health_diff},{time}";
+    content = $"{time},{id},{action},{outcome},{health},{health_diff},{accuracy},{opp_accuracy},{character.GetPosition()},{opponent.GetPosition()}";
 
     WriteFile(content);
   }
