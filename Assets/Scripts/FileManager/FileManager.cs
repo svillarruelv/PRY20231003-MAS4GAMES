@@ -12,6 +12,11 @@ public class FileManager : MonoBehaviour
   public string FilePath;
   private string FilePathIncomplete = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MAS_LOGS");
 
+  //Actions
+  public enum Actions { ATTACK, BLOCK, MOVE, DODGE, DRINK_POTION, HURT}; // Actions for the file content
+  public enum Action_Result {SUCCESS, FAIL, DEAD} //Action outcome/result
+  public enum Character { ENEMY, PLAYER }; //Who made the action
+
   private Mutex fileMutex;
 
   private void Awake()
@@ -62,7 +67,7 @@ public class FileManager : MonoBehaviour
     {
       using (StreamWriter writer = new StreamWriter(FilePath, true)) // Utiliza el parámetro 'append' en 'true' para agregar al archivo existente
       {
-        writer.WriteLine(content); // Agrega una nueva línea al archivo
+        writer.WriteLine(content); //Add a new line to the file
       }
     }
     finally
