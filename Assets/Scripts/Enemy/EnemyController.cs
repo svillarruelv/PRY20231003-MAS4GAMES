@@ -71,12 +71,14 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     var playerToHit = player;
 
     isAttacking = true;
+    this.enemyStats.HitAttempt();
     enemyAnimator.SetBool("isAttacking", true);
 
     StartCoroutine(Utility.TimedEvent(() =>
     {
       if (Vector3.Distance(transform.position, player.transform.position) <= attackRange + 1)
       {
+        this.enemyStats.HitSuccess();
         FileManager.Instance.WriteAction(FileManager.ActionType.ATTACK,
                                           FileManager.ActionResult.SUCCESS,
                                           FileManager.CharacterType.ENEMY,
@@ -84,6 +86,14 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                           playerToHit.GetComponent<IStatsDataProvider>());
 
         playerToHit.GetComponent<CombatController>().TakeDamage(damage);
+      }
+      else
+      {
+        FileManager.Instance.WriteAction(FileManager.ActionType.ATTACK,
+                                            FileManager.ActionResult.FAIL,
+                                            FileManager.CharacterType.ENEMY,
+                                            this.GetComponent<IStatsDataProvider>(),
+                                            playerToHit.GetComponent<IStatsDataProvider>());
       }
     }, 1f));
 

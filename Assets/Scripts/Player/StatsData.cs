@@ -19,15 +19,15 @@ public class StatsData
   }
   public float GetAccuracy()
   {
-    if (hit_attempts == 0) return 1;
-    accuracy = hit_success / hit_attempts * 100;
+    if (hit_attempts == 0) return 1f;
+    accuracy = (float)hit_success / (float)hit_attempts * 100f;
     return accuracy;
   }
-  public void hitAttempt()
+  public void HitAttempt()
   {
     hit_attempts++;
   }
-  public void hitSuccess()
+  public void HitSuccess()
   {
     hit_success++;
   }
