@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IStatsDataProvider
 {
   public StatsData enemyStats = new StatsData();
 
@@ -20,6 +20,17 @@ public class EnemyController : MonoBehaviour
 
   [SerializeField]
   private Slider healthBar;
+
+  public StatsData GetStatsData()
+  {
+    return enemyStats;
+  }
+
+  public Vector3 GetPosition()
+  {
+    return transform.position;
+  }
+
 
   void Start()
   {
@@ -66,6 +77,12 @@ public class EnemyController : MonoBehaviour
     {
       if (Vector3.Distance(transform.position, player.transform.position) <= attackRange + 1)
       {
+        FileManager.Instance.WriteAction(FileManager.ActionType.ATTACK,
+                                          FileManager.ActionResult.SUCCESS,
+                                          FileManager.CharacterType.ENEMY,
+                                          this.GetComponent<IStatsDataProvider>(),
+                                          playerToHit.GetComponent<IStatsDataProvider>());
+
         playerToHit.GetComponent<CombatController>().TakeDamage(damage);
       }
     }, 1f));

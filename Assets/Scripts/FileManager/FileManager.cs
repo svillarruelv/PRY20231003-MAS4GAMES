@@ -13,9 +13,9 @@ public class FileManager : MonoBehaviour
   private string FilePathIncomplete = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MAS_LOGS");
 
   //Actions
-  public enum Actions { ATTACK, BLOCK, MOVE, DODGE, DRINK_POTION, HURT}; // Actions for the file content
-  public enum Action_Result {SUCCESS, FAIL, DEAD} //Action outcome/result
-  public enum Character { ENEMY, PLAYER }; //Who made the action
+  public enum ActionType { ATTACK, BLOCK, MOVE, DODGE, DRINK_POTION, HURT }; // Actions for the file content
+  public enum ActionResult { SUCCESS, FAIL, DEAD } //Action outcome/result
+  public enum CharacterType { ENEMY, PLAYER }; //Who made the action
 
   private Mutex fileMutex;
 
@@ -49,7 +49,7 @@ public class FileManager : MonoBehaviour
   public void CreateFile()
   {
     DateTime now = DateTime.Now;
-    string fileName = string.Format("replay_{0:D2}_{1:D2}_{2:D2}{3:D2}.json", now.Day, now.Month, now.Hour, now.Minute);
+    string fileName = string.Format("replay_{0:D2}_{1:D2}_{2:D2}{3:D2}.txt", now.Day, now.Month, now.Hour, now.Minute);
     FileName = fileName;
     string logMessage = "Archivo se creó con el nombre: " + FileName;
     Debug.Log(logMessage);
@@ -75,4 +75,53 @@ public class FileManager : MonoBehaviour
       fileMutex.ReleaseMutex();
     }
   }
+
+  //UTITILY WRITER FUNCTIONS
+  public void WriteAction(ActionType _action, ActionResult _outcome, CharacterType _type, IStatsDataProvider character, IStatsDataProvider opponent)
+  {
+    /*int _opp_health;
+    int _opp_accuracy;
+
+    if (_type == CharacterType.PLAYER) {
+      _opp_health = avg_health;
+      _opp_accuracy = avg_accuracy;
+    }*/
+    //Variables
+    string content;
+    StatsData characterData = character.GetStatsData();
+    StatsData opponentData = opponent.GetStatsData();
+    DateTime now = DateTime.Now;
+    int _health_diff = characterData.health - opponentData.health;
+
+    //String variables
+    string action = _action.ToString();
+    string outcome = _outcome.ToString();
+    string type = _type.ToString();
+    string time = now.ToString("HH:mm:ss");
+    string health = characterData.health.ToString();
+    string id = characterData.id.ToString();
+    string health_diff = _health_diff.ToString();
+    string accuracy = characterData.GetAccuracy().ToString();
+    string opp_accuracy = opponentData.GetAccuracy().ToString();
+
+    content = $"{id},{type},{action},{outcome},{health},{accuracy},{opp_accuracy},{health_diff},{time}";
+
+    WriteFile(content);
+  }
+
+  /*
+  //Ejemplo para el enemigo:
+    string _action = Actions.ATTACK.ToString();
+    string _outcome = Action_Result.SUCCESS.ToString();
+    string _character = Character.ENEMY.ToString();
+    string _id = "1";
+    int h = 10; string health = h.ToString();
+    int accuracy = 50; string a = accuracy.ToString();
+    int op_accuracy = 60; string op_a = op_accuracy.ToString();
+    int health_diff = h - 8; string h_diff = health_diff.ToString();
+    DateTime now = DateTime.Now; string time = now.ToString("HH:mm:ss");
+    
+    content = _id + ',' + _character + ',' + _action + ',' + _outcome + ',' + health + ',' + a + ',' + op_a + ',' + h_diff + ',' + time;
+  */
+
 }

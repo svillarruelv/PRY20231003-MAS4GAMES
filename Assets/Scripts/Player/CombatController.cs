@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CombatController : MonoBehaviour
+public class CombatController : MonoBehaviour, IStatsDataProvider
 {
   public StatsData playerStats = new StatsData();
 
@@ -25,6 +25,17 @@ public class CombatController : MonoBehaviour
   public float defaultRange = 1.5f;
 
   public Slider healthBar;
+
+  public StatsData GetStatsData()
+  {
+    return playerStats;
+  }
+
+  public Vector3 GetPosition()
+  {
+    return transform.position;
+  }
+
 
   void Start()
   {
@@ -103,15 +114,9 @@ public class CombatController : MonoBehaviour
       playerStats.health -= damage;
       movementController.characterAnimator.SetBool("isHit", true);
 
-      string content = "Player receives damage";
-      FileManager.Instance.WriteFile(content);
-
       if (playerStats.health <= 0)
       {
         movementController.characterAnimator.SetBool("isDead", true);
-
-        content = "Player is dead";
-        FileManager.Instance.WriteFile(content);
         CanvasManager.instance.Wasted();
       }
     }
