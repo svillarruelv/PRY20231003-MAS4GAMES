@@ -36,6 +36,10 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
     return transform.position;
   }
 
+  public float GetMainMetric()
+  {
+    return (float)playerStats.points;
+  }
 
   void Start()
   {
@@ -45,6 +49,7 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
     healthBar.maxValue = playerStats.health;
     healthBar.value = playerStats.health;
 
+    playerStats.id = 0;
     movementController = GetComponent<MovementController>();
   }
 
@@ -106,7 +111,7 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
     movementController.characterAnimator.SetBool("isBlocking", true);
   }
 
-  public void TakeDamage(int damage)
+  public void TakeDamage(int damage, EnemyController enemy)
   {
     if (!movementController.characterAnimator.GetBool("isBlocking"))
     {
@@ -116,6 +121,12 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
 
       if (playerStats.health <= 0)
       {
+        FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
+                                            FileManager.ActionResult.DEAD,
+                                            FileManager.CharacterType.PLAYER,
+                                            this.GetComponent<IStatsDataProvider>(),
+                                            enemy.GetComponent<IStatsDataProvider>());
+
         movementController.characterAnimator.SetBool("isDead", true);
         CanvasManager.instance.Wasted();
       }
