@@ -101,10 +101,10 @@ public class FileManager : MonoBehaviour
     string health = characterData.health.ToString();
     string id = characterData.id.ToString();
     string health_diff = _health_diff.ToString();
-    string accuracy = characterData.GetAccuracy().ToString();
-    string opp_accuracy = opponentData.GetAccuracy().ToString();
+    string mainMetric = character.GetMainMetric().ToString();
+    string opp_mainMetric = opponent.GetMainMetric().ToString();
 
-    content = $"{time},{id},{action},{outcome},{health},{health_diff},{accuracy},{opp_accuracy},{character.GetPosition()},{opponent.GetPosition()}";
+    content = $"{time},{id},{type},{action},{outcome},{health},{health_diff},{mainMetric},{opp_mainMetric},{character.GetPosition()},{opponent.GetPosition()}";
 
     WriteFile(content);
   }
