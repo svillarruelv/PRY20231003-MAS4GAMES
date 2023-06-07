@@ -121,6 +121,13 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     enemyAnimator.SetBool("isHit", true);
     player.GetComponent<CombatController>().playerStats.points += 10; //Player gets 10 points for attacking the enemy
 
+    //Record that PLAYER attacked the ENEMY
+    FileManager.Instance.WriteAction(FileManager.ActionType.ATTACK,
+                                            FileManager.ActionResult.SUCCESS,
+                                            FileManager.CharacterType.PLAYER,
+                                            player.GetComponent<IStatsDataProvider>(),
+                                            this.GetComponent<IStatsDataProvider>());
+
     if (enemyStats.health <= 0)
     {
       player.GetComponent<CombatController>().playerStats.points += 100; //Player gets 100 points for attacking the enemy

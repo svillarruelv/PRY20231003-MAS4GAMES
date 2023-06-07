@@ -119,8 +119,16 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
       playerStats.health -= damage;
       movementController.characterAnimator.SetBool("isHit", true);
 
+      //Record that the character was hurt
+      FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
+                                            FileManager.ActionResult.SUCCESS,
+                                            FileManager.CharacterType.PLAYER,
+                                            this.GetComponent<IStatsDataProvider>(),
+                                            enemy.GetComponent<IStatsDataProvider>());
+
       if (playerStats.health <= 0)
       {
+        //Record that the player was killed
         FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
                                             FileManager.ActionResult.DEAD,
                                             FileManager.CharacterType.PLAYER,
