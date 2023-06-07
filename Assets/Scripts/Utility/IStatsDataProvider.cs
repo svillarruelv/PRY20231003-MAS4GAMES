@@ -5,4 +5,6 @@ public interface IStatsDataProvider
 {
   StatsData GetStatsData();
   Vector3 GetPosition();
+  float GetMainMetric();
+
 }
