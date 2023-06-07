@@ -9,6 +9,9 @@ public class StatsData
   public float accuracy;
   public int hit_success;
   public int hit_attempts;
+
+  public int points;
+
   public StatsData()
   {
     System.Random random = new System.Random();
@@ -16,10 +19,11 @@ public class StatsData
     id = random.Next();
     hit_success = 0;
     hit_attempts = 0;
+    points = 0;
   }
   public float GetAccuracy()
   {
-    if (hit_attempts == 0) return 1f;
+    if (hit_attempts == 0) return 100f;
     accuracy = (float)hit_success / (float)hit_attempts * 100f;
     return accuracy;
   }
