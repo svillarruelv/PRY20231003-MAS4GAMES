@@ -100,11 +100,12 @@ public class FileManager : MonoBehaviour
     string time = now.ToString("HH:mm:ss");
     string health = characterData.health.ToString();
     string id = characterData.id.ToString();
+    string opp_id = opponentData.id.ToString();
     string health_diff = _health_diff.ToString();
     string mainMetric = character.GetMainMetric().ToString();
     string opp_mainMetric = opponent.GetMainMetric().ToString();
 
-    content = $"{time},{id},{type},{action},{outcome},{health},{health_diff},{mainMetric},{opp_mainMetric},{character.GetPosition()},{opponent.GetPosition()}";
+    content = $"{time},{id},{type},{action},{outcome},{opp_id},{health},{health_diff},{mainMetric},{opp_mainMetric},{character.GetPosition()},{opponent.GetPosition()}";
 
     WriteFile(content);
   }
