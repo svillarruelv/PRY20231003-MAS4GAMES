@@ -12,6 +12,8 @@ public class StatsData
 
   public int points;
 
+  public int hordeNumber;
+
   public StatsData()
   {
     System.Random random = new System.Random();
@@ -20,6 +22,7 @@ public class StatsData
     hit_success = 0;
     hit_attempts = 0;
     points = 0;
+    hordeNumber = 1;
   }
   public float GetAccuracy()
   {

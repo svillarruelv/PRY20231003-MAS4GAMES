@@ -50,7 +50,7 @@ public class EnemySpawner : MonoBehaviour
   private IEnumerator SpawnNewEnemiesCoroutine()
   {
     hordeNumber++;
-
+    playerObject.GetComponent<CombatController>().playerStats.hordeNumber = hordeNumber;
     yield return new WaitForSeconds(3f); // Esperar un frame extra antes de verificar si los enemigos están derrotados
 
     foreach (Transform spawnPoint in spawnPoints)
@@ -74,6 +74,7 @@ public class EnemySpawner : MonoBehaviour
 
     // Modificar la variable player
     enemyController.player = playerObject;
+    enemyController.enemyStats.hordeNumber = hordeNumber;
   }
 
   private int GetEnemyCount()

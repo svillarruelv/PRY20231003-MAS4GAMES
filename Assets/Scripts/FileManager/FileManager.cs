@@ -92,6 +92,7 @@ public class FileManager : MonoBehaviour
     StatsData opponentData = opponent.GetStatsData();
     DateTime now = DateTime.Now;
     int _health_diff = characterData.health - opponentData.health;
+    int _hordeNumber = characterData.hordeNumber;
 
     //String variables
     string action = _action.ToString();
@@ -104,12 +105,12 @@ public class FileManager : MonoBehaviour
     string health_diff = _health_diff.ToString();
     string mainMetric = character.GetMainMetric().ToString();
     string opp_mainMetric = opponent.GetMainMetric().ToString();
+    string hordeNumber = _hordeNumber.ToString();
 
-    content = $"{time},{id},{type},{action},{outcome},{opp_id},{health},{health_diff},{mainMetric},{opp_mainMetric},{character.GetPosition()},{opponent.GetPosition()}";
+    content = $"{time},{id},{hordeNumber},{type},{action},{outcome},{opp_id},{health},{health_diff},{mainMetric},{opp_mainMetric},{character.GetPosition()},{opponent.GetPosition()}";
 
     WriteFile(content);
   }
-
   /*
   //Ejemplo para el enemigo:
     string _action = Actions.ATTACK.ToString();
