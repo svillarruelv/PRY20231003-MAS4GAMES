@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
   [SerializeField]
   private GameObject weapon;
-  private float chasingRange = 8f;
+  private float chasingRange = 10f;
   private float attackRange;
   private int damage;
 
@@ -62,7 +62,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     {
       //BUSCA AL JUGADOR
       transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
-      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), 0.003f);
+      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), 0.008f);
 
       //Record that the enemy is moving
       FileManager.Instance.WriteAction(FileManager.ActionType.MOVE,
