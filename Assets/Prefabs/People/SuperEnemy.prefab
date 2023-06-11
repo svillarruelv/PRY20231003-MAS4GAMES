@@ -417,6 +417,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 7016031268575998060, guid: db399abeaf0786e46b205224db6aadb9,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7016031268575998060, guid: db399abeaf0786e46b205224db6aadb9,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7020413615783834296, guid: db399abeaf0786e46b205224db6aadb9,
         type: 3}
       propertyPath: m_Layer
@@ -585,7 +595,7 @@ PrefabInstance:
     - target: {fileID: 8811372500464923391, guid: db399abeaf0786e46b205224db6aadb9,
         type: 3}
       propertyPath: m_Name
-      value: EnemyWithSword
+      value: SuperEnemy
       objectReference: {fileID: 0}
     - target: {fileID: 8888555792346978702, guid: db399abeaf0786e46b205224db6aadb9,
         type: 3}
