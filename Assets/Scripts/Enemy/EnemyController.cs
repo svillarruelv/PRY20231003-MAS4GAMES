@@ -68,7 +68,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     {
       // BUSCA AL JUGADOR
 
-      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), 0.008f);
+      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), 0.009f);
 
       // Record that the enemy is moving
       FileManager.Instance.WriteAction(FileManager.ActionType.MOVE,
