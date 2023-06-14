@@ -30,12 +30,18 @@ public class CanvasManager : MonoBehaviour
 
     StartCoroutine(Utility.TimedEvent(() =>
     {
-      SceneLoading(0);
+      Time.timeScale = 1f;
+      image.SetActive(false);
+#if UNITY_EDITOR
+      UnityEditor.EditorApplication.isPlaying = false;
+#else
+      Application.Quit();
+#endif
     }, 0.8f));
   }
 
   public void SceneLoading(int index)
   {
-    SceneManager.LoadScene(index);
+    SceneManager.LoadScene(index, LoadSceneMode.Single);
   }
 }
