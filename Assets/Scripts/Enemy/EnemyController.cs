@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour, IStatsDataProvider
 {
+  private AudioSource audioSource;
+  public AudioClip hurtSound;
+  public AudioClip deathSound;
+
   public StatsData enemyStats = new StatsData();
 
   private Animator enemyAnimator;
@@ -41,6 +45,11 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
   {
     enemyAnimator = GetComponent<Animator>();
 
+    audioSource = GetComponent<AudioSource>();
+    if (audioSource == null)
+    {
+      audioSource = gameObject.AddComponent<AudioSource>();
+    }
     // Small values for easier testing
     enemyStats.health = 100;
     damage = 10;
@@ -102,7 +111,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
   private IEnumerator AttackCoroutine(GameObject playerToHit)
   {
-    yield return new WaitForSeconds(1f);
+    yield return new WaitForSeconds(0.9f);
 
     if (Vector3.Distance(transform.position, player.transform.position) <= attackRange + 1)
     {
@@ -131,7 +140,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     healthBar.value -= damage;
     enemyStats.health -= damage;
     enemyAnimator.SetBool("isHit", true);
-    StopCoroutine(attackCoroutine);
+    if (isAttacking) StopCoroutine(attackCoroutine);
     player.GetComponent<CombatController>().playerStats.points += 10; // Player gets 10 points for attacking the enemy
 
     // Record that PLAYER attacked the ENEMY
@@ -155,10 +164,10 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
       GetComponent<Collider>().enabled = false;
       enemyAnimator.SetBool("isDead", true);
       player = null;
-
+      audioSource.PlayOneShot(deathSound);
       Destroy(gameObject, 4f);
     }
-
+    audioSource.PlayOneShot(hurtSound);
     // Record that the enemy was attacked
     FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
                                         FileManager.ActionResult.SUCCESS,
