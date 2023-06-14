@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class CombatController : MonoBehaviour, IStatsDataProvider
 {
+  private AudioSource audioSource;
+  public AudioClip hurtSound;
   public StatsData playerStats = new StatsData();
 
   private MovementController movementController;
@@ -45,6 +47,12 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
   {
     damage = defaultDamage;
     range = defaultDamage;
+
+    audioSource = GetComponent<AudioSource>();
+    if (audioSource == null)
+    {
+      audioSource = gameObject.AddComponent<AudioSource>();
+    }
 
     healthBar.maxValue = playerStats.health;
     healthBar.value = playerStats.health;
@@ -118,6 +126,8 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
       healthBar.value -= damage;
       playerStats.health -= damage;
       movementController.characterAnimator.SetBool("isHit", true);
+
+      audioSource.PlayOneShot(hurtSound);
 
       //Record that the character was hurt
       FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
