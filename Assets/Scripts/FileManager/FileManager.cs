@@ -28,7 +28,9 @@ public class FileManager : MonoBehaviour
     else
     {
       instance = this;
+#if UNITY_EDITOR
       instance.CreateFile();
+#endif
       DontDestroyOnLoad(gameObject);
     }
 
