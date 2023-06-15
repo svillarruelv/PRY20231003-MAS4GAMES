@@ -58,40 +58,48 @@ public class QEnemyAgent : Agent
     // 4. Precisión del enemigo
     float enemyAccuracy = enemyController.GetMainMetric();
     sensor.AddObservation(enemyAccuracy);
+
+    // 5. Posición del jugador
+    sensor.AddObservation(enemyPosition);
   }
-  /*   public override void OnActionReceived(float[] vectorAction)
-    {
-      // Acciones recibidas del agente
+  public override void OnActionReceived(ActionBuffers actions)
+  {
+    // Acciones recibidas del agente
 
-      // Ejemplo de acciones basadas en los valores de vectorAction
-      float moveX = vectorAction[0];
-      float moveZ = vectorAction[1];
-      bool attack = vectorAction[2] > 0f;
+    // Ejemplo de acciones basadas en los valores de vectorAction
+    float moveX = actions.ContinuousActions[0];
+    float moveZ = actions.ContinuousActions[1];
+    bool attack = actions.ContinuousActions[2] > 0f;
+    float movementSpeed = 5f;
 
-      // Realizar acciones en función de los valores recibidos
-      // Por ejemplo, moverse en una dirección, atacar al jugador, etc.
+    transform.position += new Vector3(moveX, 0, moveZ) * Time.deltaTime * movementSpeed;
 
-      // Actualizar las estadísticas y la recompensa según sea necesario
+    // Realizar acciones en función de los valores recibidos
+    // Por ejemplo, moverse en una dirección, atacar al jugador, etc.
 
-      // Finalizar el episodio si se cumple alguna condición (por ejemplo, si el enemigo muere)
+    // Actualizar las estadísticas y la recompensa según sea necesario
 
-      // Otorgar una recompensa al agente según su desempeño
-      float reward = 0f;
-      if (enemyController.enemyStats.health <= 0)
-        reward += 100f; // Recompensa positiva si el enemigo muere
-      else if (playerCombatController.playerStats.health <= 0)
-        reward -= 100f; // Recompensa negativa si el jugador muere
-      else
-        reward -= 0.01f; // Penalización por cada paso de tiempo sin terminar el episodio
+    // Finalizar el episodio si se cumple alguna condición (por ejemplo, si el enemigo muere)
 
-      // Asignar la recompensa al agente
-      AddReward(reward);
-    } */
+    // Otorgar una recompensa al agente según su desempeño
+    float reward = 0f;
+    if (enemyController.enemyStats.health <= 0)
+      reward += 100f; // Recompensa positiva si el enemigo muere
+    else if (playerCombatController.playerStats.health <= 0)
+      reward -= 100f; // Recompensa negativa si el jugador muere
+    else
+      reward -= 0.01f; // Penalización por cada paso de tiempo sin terminar el episodio
 
-  /* public override void Heuristic(float[] actionsOut)
+    // Asignar la recompensa al agente
+    AddReward(reward);
+  }
+
+  public override void Heuristic(in ActionBuffers actionsOut)
   {
     // Acciones para el modo Heurístico (control manual)
-
+    ActionSegment<float> continuousActions = actionsOut.ContinuousActions;
+    continuousActions[0] = Input.GetAxisRaw("Horizontal");
+    continuousActions[1] = Input.GetAxisRaw("Vertical");
     // Por ejemplo, asignar valores directamente a actionsOut para controlar el enemigo manualmente
-  } */
+  }
 }
