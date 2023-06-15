@@ -129,23 +129,24 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
       movementController.characterAnimator.SetBool("isHit", true);
 
       audioSource.PlayOneShot(hurtSound);
-
+#if UNITY_EDITOR
       //Record that the character was hurt
       FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
                                             FileManager.ActionResult.SUCCESS,
                                             FileManager.CharacterType.PLAYER,
                                             this.GetComponent<IStatsDataProvider>(),
                                             enemy.GetComponent<IStatsDataProvider>());
-
+#endif
       if (playerStats.health <= 0)
       {
+#if UNITY_EDITOR
         //Record that the player was killed
         FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
                                             FileManager.ActionResult.DEAD,
                                             FileManager.CharacterType.PLAYER,
                                             this.GetComponent<IStatsDataProvider>(),
                                             enemy.GetComponent<IStatsDataProvider>());
-
+#endif
         movementController.characterAnimator.SetBool("isDead", true);
         CanvasManager.instance.Wasted();
       }
