@@ -79,12 +79,14 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
       transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), 0.009f);
 
+#if UNITY_EDITOR
       // Record that the enemy is moving
       FileManager.Instance.WriteAction(FileManager.ActionType.MOVE,
                                           FileManager.ActionResult.SUCCESS,
                                           FileManager.CharacterType.ENEMY,
                                           this.GetComponent<IStatsDataProvider>(),
                                           player.GetComponent<IStatsDataProvider>());
+#endif
     }
     else if (!isAttacking && Vector3.Distance(transform.position, player.transform.position) <= attackRange)
     {
@@ -116,14 +118,17 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     if (Vector3.Distance(transform.position, player.transform.position) <= attackRange + 1)
     {
       this.enemyStats.HitSuccess();
+#if UNITY_EDITOR
       FileManager.Instance.WriteAction(FileManager.ActionType.ATTACK,
                                       FileManager.ActionResult.SUCCESS,
                                       FileManager.CharacterType.ENEMY,
                                       this.GetComponent<IStatsDataProvider>(),
                                       playerToHit.GetComponent<IStatsDataProvider>());
+#endif
 
       playerToHit.GetComponent<CombatController>().TakeDamage(damage, this);
     }
+#if UNITY_EDITOR
     else
     {
       FileManager.Instance.WriteAction(FileManager.ActionType.ATTACK,
@@ -132,6 +137,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                       this.GetComponent<IStatsDataProvider>(),
                                       playerToHit.GetComponent<IStatsDataProvider>());
     }
+#endif
 
   }
 
@@ -142,37 +148,39 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     enemyAnimator.SetBool("isHit", true);
     if (isAttacking) StopCoroutine(attackCoroutine);
     player.GetComponent<CombatController>().playerStats.points += 10; // Player gets 10 points for attacking the enemy
-
+    player.GetComponent<CombatController>().UpdateScoreText();
+    audioSource.PlayOneShot(hurtSound);
+#if UNITY_EDITOR
     // Record that PLAYER attacked the ENEMY
     FileManager.Instance.WriteAction(FileManager.ActionType.ATTACK,
                                         FileManager.ActionResult.SUCCESS,
                                         FileManager.CharacterType.PLAYER,
                                         player.GetComponent<IStatsDataProvider>(),
                                         this.GetComponent<IStatsDataProvider>());
-
-    if (enemyStats.health <= 0)
-    {
-      player.GetComponent<CombatController>().playerStats.points += 100; // Player gets 100 points for killing the enemy
-
-      // Record that the enemy was attacked and killed
-      FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
-                                          FileManager.ActionResult.DEAD,
-                                          FileManager.CharacterType.ENEMY,
-                                          this.GetComponent<IStatsDataProvider>(),
-                                          player.GetComponent<IStatsDataProvider>());
-
-      GetComponent<Collider>().enabled = false;
-      enemyAnimator.SetBool("isDead", true);
-      player = null;
-      audioSource.PlayOneShot(deathSound);
-      Destroy(gameObject, 4f);
-    }
-    audioSource.PlayOneShot(hurtSound);
     // Record that the enemy was attacked
     FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
                                         FileManager.ActionResult.SUCCESS,
                                         FileManager.CharacterType.ENEMY,
                                         this.GetComponent<IStatsDataProvider>(),
                                         player.GetComponent<IStatsDataProvider>());
+#endif
+    if (enemyStats.health <= 0)
+    {
+      player.GetComponent<CombatController>().playerStats.points += 100; // Player gets 100 points for killing the enemy
+      player.GetComponent<CombatController>().UpdateScoreText();
+#if UNITY_EDITOR
+      // Record that the enemy was attacked and killed
+       FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
+                                          FileManager.ActionResult.DEAD,
+                                          FileManager.CharacterType.ENEMY,
+                                          this.GetComponent<IStatsDataProvider>(),
+                                          player.GetComponent<IStatsDataProvider>());
+#endif
+      GetComponent<Collider>().enabled = false;
+      enemyAnimator.SetBool("isDead", true);
+      player = null;
+      audioSource.PlayOneShot(deathSound);
+      Destroy(gameObject, 4f);
+    }
   }
 }
