@@ -142,6 +142,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     enemyAnimator.SetBool("isHit", true);
     if (isAttacking) StopCoroutine(attackCoroutine);
     player.GetComponent<CombatController>().playerStats.points += 10; // Player gets 10 points for attacking the enemy
+    player.GetComponent<CombatController>().UpdateScoreText();
 
     // Record that PLAYER attacked the ENEMY
     FileManager.Instance.WriteAction(FileManager.ActionType.ATTACK,
@@ -153,7 +154,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     if (enemyStats.health <= 0)
     {
       player.GetComponent<CombatController>().playerStats.points += 100; // Player gets 100 points for killing the enemy
-
+      player.GetComponent<CombatController>().UpdateScoreText();
       // Record that the enemy was attacked and killed
       FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
                                           FileManager.ActionResult.DEAD,

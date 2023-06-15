@@ -27,6 +27,7 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
   public float defaultRange = 1.5f;
 
   public Slider healthBar;
+  public TMPro.TextMeshProUGUI uiText;
 
   public StatsData GetStatsData()
   {
@@ -149,5 +150,10 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
         CanvasManager.instance.Wasted();
       }
     }
+  }
+
+  public void UpdateScoreText()
+  {
+    uiText.text = $"Score: {playerStats.points}";
   }
 }
