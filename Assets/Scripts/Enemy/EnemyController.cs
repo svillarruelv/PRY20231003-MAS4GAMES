@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
   public StatsData enemyStats = new StatsData();
 
-  private Animator enemyAnimator;
+  public Animator enemyAnimator;
 
   [SerializeField]
   private GameObject weapon;
@@ -20,12 +20,12 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
   private int damage;
 
   public GameObject player;
-  private bool isAttacking = false;
+  public bool isAttacking = false;
   private Coroutine attackCoroutine;
+  public bool isAgent = false;
 
   [SerializeField]
   private Slider healthBar;
-
   public StatsData GetStatsData()
   {
     return enemyStats;
@@ -58,7 +58,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     healthBar.value = enemyStats.health;
 
     attackRange = weapon.GetComponent<WeaponController>().weaponData.range;
-    // damage = weapon.GetComponent<WeaponController>().weaponData.damage;
+
   }
 
   void Update()
@@ -67,34 +67,37 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
     healthBar.gameObject.SetActive(true);
     healthBar.transform.LookAt(new Vector3(player.transform.position.x, healthBar.transform.position.y, player.transform.position.z));
-
     if (Vector3.Distance(transform.position, player.transform.position) < chasingRange)
     {
       transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
     }
-
-    if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange && !isAttacking)
+    if (!isAgent)
     {
-      // BUSCA AL JUGADOR
 
-      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), 0.009f);
+      if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange && !isAttacking)
+      {
+        // BUSCA AL JUGADOR
+        enemyAnimator.SetBool("isMoving", true);
+        transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), 0.009f);
 
 #if UNITY_EDITOR
-      // Record that the enemy is moving
-      FileManager.Instance.WriteAction(FileManager.ActionType.MOVE,
-                                          FileManager.ActionResult.SUCCESS,
-                                          FileManager.CharacterType.ENEMY,
-                                          this.GetComponent<IStatsDataProvider>(),
-                                          player.GetComponent<IStatsDataProvider>());
+        // Record that the enemy is moving
+        FileManager.Instance.WriteAction(FileManager.ActionType.MOVE,
+                                            FileManager.ActionResult.SUCCESS,
+                                            FileManager.CharacterType.ENEMY,
+                                            this.GetComponent<IStatsDataProvider>(),
+                                            player.GetComponent<IStatsDataProvider>());
 #endif
-    }
-    else if (!isAttacking && Vector3.Distance(transform.position, player.transform.position) <= attackRange)
-    {
-      Attack();
+      }
+      else if (!isAttacking && Vector3.Distance(transform.position, player.transform.position) <= attackRange)
+      {
+        enemyAnimator.SetBool("isMoving", false);
+        Attack();
+      }
     }
   }
 
-  private void Attack()
+  public void Attack()
   {
     var playerToHit = player;
 
