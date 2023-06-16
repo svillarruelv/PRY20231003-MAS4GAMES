@@ -62,8 +62,8 @@ public class QEnemyAgent : Agent
     sensor.AddObservation(distanceToPlayer);
 
     // 2. Diferencia entre la vida del jugador y el enemigo
-    float healthDifference = playerCombatController.playerStats.health - enemyController.enemyStats.health;
-    sensor.AddObservation(healthDifference);
+    sensor.AddObservation(playerCombatController.playerStats.health);
+    sensor.AddObservation(enemyController.enemyStats.health);
 
     // 3. Puntaje del jugador
     float playerScore = playerCombatController.GetMainMetric();
@@ -78,77 +78,108 @@ public class QEnemyAgent : Agent
   }
   public override void OnActionReceived(ActionBuffers actions)
   {
-    // Acciones recibidas del agente
+    // Acciones discretas del agente
+    int state = actions.DiscreteActions[0]; // State: isMoving, isAttacking, isIddle
+    int attackRange = actions.DiscreteActions[1]; //5
+    int chasingRange = actions.DiscreteActions[2]; //5
+    int speedRange = actions.DiscreteActions[3]; //5
+    int movementAction = actions.DiscreteActions[4]; // UP DOWN LEFT RIGHT
 
-    // Ejemplo de acciones basadas en los valores de vectorAction
-    float moveX = actions.ContinuousActions[0];
-    float moveZ = actions.ContinuousActions[1];
-    bool attack = actions.DiscreteActions[0] == 1;
-    int prevPlayerHealth = player.GetComponent<CombatController>().playerStats.health;
-    float movementSpeed = 5f;
+    Vector3 moveDirection = Vector3.zero;
+    switch (movementAction)
+    {
+      case 0: // Mover hacia adelante
+        moveDirection = transform.forward;
+        break;
+      case 1: // Mover hacia atrás
+        moveDirection = -transform.forward;
+        break;
+      case 2: // Mover hacia la izquierda
+        moveDirection = -transform.right;
+        break;
+      case 3: // Mover hacia la derecha
+        moveDirection = transform.right;
+        break;
+    }
 
-
-    if (attack)
+    if (state == 0)
+    {
+      enemyController.enemyAnimator.SetBool("isMoving", true);
+      transform.position += moveDirection * Time.deltaTime * 1f;
+    }
+    else if (state == 1)
     {
       enemyController.enemyAnimator.SetBool("isMoving", false);
       enemyController.Attack();
     }
-    else
+
+    switch (attackRange)
     {
-      enemyController.enemyAnimator.SetBool("isMoving", true);
-      transform.position += new Vector3(moveX, 0, moveZ) * Time.deltaTime * movementSpeed;
+      case 0:
+        enemyController.attackRange = 1f;
+        break;
+      case 1:
+        enemyController.attackRange = 1.5f;
+        break;
+      case 2:
+        enemyController.attackRange = 2f;
+        break;
+      case 3:
+        enemyController.attackRange = 2.5f;
+        break;
+      case 4:
+        enemyController.attackRange = 3f;
+        break;
+    }
+
+    switch (chasingRange)
+    {
+      case 0:
+        enemyController.chasingRange = 5f;
+        break;
+      case 1:
+        enemyController.chasingRange = 8f;
+        break;
+      case 2:
+        enemyController.chasingRange = 10f;
+        break;
+      case 3:
+        enemyController.chasingRange = 15f;
+        break;
+      case 4:
+        enemyController.chasingRange = 20f;
+        break;
+    }
+
+    switch (speedRange)
+    {
+      case 0:
+        enemyController.speedRange = 0.005f;
+        break;
+      case 1:
+        enemyController.speedRange = 0.007f;
+        break;
+      case 2:
+        enemyController.speedRange = 0.009f;
+        break;
+      case 3:
+        enemyController.speedRange = 0.011f;
+        break;
+      case 4:
+        enemyController.speedRange = 0.013f;
+        break;
     }
 
     // Actualizar el estado y la acción previa
     int previousState = state;
     int previousAction = action;
     state = CalculateState();
-    action = attack ? 1 : 0;
 
     // Calcular la recompensa en base al cambio de estado
     float reward = CalculateReward();
-
+    SetReward(reward);
     // Actualizar la QTable
     QTable[previousState][previousAction] += learningRate * (reward + discountFactor * GetMaxQValue(state) - QTable[previousState][previousAction]);
-
-    // Obtener la distancia entre el enemigo y el jugador
-    Vector3 playerPosition = playerCombatController.GetPosition();
-    Vector3 enemyPosition = transform.position;
-    float distanceToPlayer = Vector3.Distance(playerPosition, enemyPosition);
-    // Calcular la recompensa basada en la diferencia entre la distancia actual y la distancia objetivo
-    if (distanceToPlayer < 15f)
-    {
-      // El enemigo está cerca del jugador (comportamiento deseado)
-      AddReward(10f);
-    }
-    else
-    {
-      // El enemigo está lejos del jugador (comportamiento no deseado)
-      AddReward(-1f);
-    }
-
-    // Verificar colisiones con montañas
-    if (CheckMountainCollision())
-    {
-      // Aplicar recompensa negativa y finalizar el episodio
-      SetReward(-10f);
-      EndEpisode();
-      return;
-    }
-
-    if (playerCombatController.playerStats.health <= 0)
-    {
-      SetReward(10f);
-      EndEpisode();
-      return;
-    }
-
-    if (enemyController.enemyStats.health <= 0)
-    {
-      SetReward(-10f);
-      EndEpisode();
-      return;
-    }
   }
 
   private bool CheckMountainCollision()
@@ -185,10 +216,44 @@ public class QEnemyAgent : Agent
 
   private float CalculateReward()
   {
-    // Lógica para calcular la recompensa
-    // ...
+    float reward = 0f;
+    // Obtener la distancia entre el enemigo y el jugador
+    Vector3 playerPosition = playerCombatController.GetPosition();
+    Vector3 enemyPosition = transform.position;
+    float distanceToPlayer = Vector3.Distance(playerPosition, enemyPosition);
 
-    return 1;
+    // Calcular la recompensa basada en la diferencia entre la distancia actual y la distancia objetivo
+    if (distanceToPlayer < 15f)
+    {
+      reward += 10f;
+    }
+    else
+    {
+      // El enemigo está lejos del jugador (comportamiento no deseado)
+      reward -= -1f;
+    }
+
+    // Verificar colisiones con montañas
+    if (CheckMountainCollision())
+    {
+      // Aplicar recompensa negativa y finalizar el episodio
+      SetReward(-10f);
+      EndEpisode();
+    }
+
+    if (playerCombatController.playerStats.health <= 0)
+    {
+      SetReward(10f);
+      EndEpisode();
+    }
+
+    if (enemyController.enemyStats.health <= 0)
+    {
+      SetReward(-10f);
+      EndEpisode();
+    }
+
+    return reward;
   }
 
   private float GetMaxQValue(int state)

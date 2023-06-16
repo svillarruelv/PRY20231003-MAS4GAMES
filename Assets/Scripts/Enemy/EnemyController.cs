@@ -15,8 +15,9 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
   [SerializeField]
   private GameObject weapon;
-  private float chasingRange = 10f;
-  private float attackRange;
+  public float chasingRange = 10f;
+  public float attackRange = 3f;
+  public float speedRange = 0.009f;
   private int damage;
 
   public GameObject player;
@@ -71,14 +72,12 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     {
       transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
     }
-    if (!isAgent)
-    {
 
-      if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange && !isAttacking)
-      {
-        // BUSCA AL JUGADOR
-        enemyAnimator.SetBool("isMoving", true);
-        transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), 0.009f);
+    if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange && !isAttacking)
+    {
+      // BUSCA AL JUGADOR
+      enemyAnimator.SetBool("isMoving", true);
+      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), speedRange);
 
 #if UNITY_EDITOR
         // Record that the enemy is moving
@@ -88,13 +87,13 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                             this.GetComponent<IStatsDataProvider>(),
                                             player.GetComponent<IStatsDataProvider>());
 #endif
-      }
-      else if (!isAttacking && Vector3.Distance(transform.position, player.transform.position) <= attackRange)
-      {
-        enemyAnimator.SetBool("isMoving", false);
-        Attack();
-      }
     }
+    else if (!isAttacking && Vector3.Distance(transform.position, player.transform.position) <= attackRange)
+    {
+      enemyAnimator.SetBool("isMoving", false);
+      Attack();
+    }
+
   }
 
   public void Attack()
