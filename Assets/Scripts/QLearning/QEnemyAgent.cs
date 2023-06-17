@@ -7,6 +7,7 @@ using Unity.MLAgents.Sensors;
 using MyEnums;
 public class QEnemyAgent : Agent
 {
+  private float episodeTime;
   public enum ActionType { ATTACK, BLOCK, MOVE, DODGE, DRINK_POTION, HURT }; // Actions for the file content
   public GameObject player;
   private EnemyController enemyController;
@@ -49,6 +50,7 @@ public class QEnemyAgent : Agent
     playerCombatController.playerStats.health = 100;
     playerCombatController.healthBar.value = 100;
     playerCombatController.isTraining = true;
+    episodeTime = 0f;
   }
 
   public override void CollectObservations(VectorSensor sensor)
@@ -78,6 +80,9 @@ public class QEnemyAgent : Agent
   }
   public override void OnActionReceived(ActionBuffers actions)
   {
+    //Tiempo del episodio
+    episodeTime += Time.deltaTime;
+
     // Acciones discretas del agente
     int state = actions.DiscreteActions[0]; // State: isMoving, isAttacking, isIddle
     int attackRange = actions.DiscreteActions[1]; //5
@@ -164,7 +169,6 @@ public class QEnemyAgent : Agent
       enemyController.enemyAnimator.SetBool("isMoving", true);
       if (Vector3.Distance(transform.position, player.transform.position) >= chasingRange)
       {
-        Debug.Log(Vector3.Distance(transform.position, player.transform.position));
         transform.position += moveDirection * Time.deltaTime * 1f;
       }
     }
@@ -245,9 +249,26 @@ public class QEnemyAgent : Agent
       EndEpisode();
     }
 
+    //SI EL JUGADOR SE MUERE
+    Debug.Log(episodeTime);
     if (playerCombatController.playerStats.health <= 0)
     {
-      SetReward(10f);
+      //SI EL JUGADOR SE MUERE MUY RAPIDO
+      if (episodeTime <= 30f)
+      {
+        reward -= 10f;
+      }
+      // SI EL JUGADOR SE MUERE EN UN INTERVALO ACEPTABLE
+      else if (30f < episodeTime && episodeTime <= 180f)
+      {
+        reward += 10f;
+      }
+      // SI EL JUGADOR SE DEMORA EN MORIR
+      else if (180f < episodeTime)
+      {
+        reward -= 10f;
+      }
+      SetReward(reward);
       EndEpisode();
     }
 
@@ -269,6 +290,8 @@ public class QEnemyAgent : Agent
     }
     //Reset Triggers
     enemyController._attackState = AttackStates.NO_ATTACK;
+
+
     return reward;
   }
 
