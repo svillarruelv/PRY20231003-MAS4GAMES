@@ -44,6 +44,7 @@ public class QEnemyAgent : Agent
     // Restablecer la salud del enemigo a 100
     enemyController.transform.position = new Vector3(0f, 0f, 10f);
     enemyController.enemyStats.health = 100;
+    enemyController.healthBar.value = 100;
     enemyController.enemyStats.accuracy = 0;
     enemyController.isAgent = true;
     enemyController.player = player;
@@ -82,30 +83,15 @@ public class QEnemyAgent : Agent
   {
     //Tiempo del episodio
     episodeTime += Time.deltaTime;
+    // Acciones continuas del agente
+    float moveX = actions.ContinuousActions[0];
+    float moveZ = actions.ContinuousActions[1];
 
     // Acciones discretas del agente
     int state = actions.DiscreteActions[0]; // State: isMoving, isAttacking, isIddle
     int attackRange = actions.DiscreteActions[1]; //5
     int chasingRange = actions.DiscreteActions[2]; //5
     int speedRange = actions.DiscreteActions[3]; //5
-    int movementAction = actions.DiscreteActions[4]; // UP DOWN LEFT RIGHT
-
-    Vector3 moveDirection = Vector3.zero;
-    switch (movementAction)
-    {
-      case 0: // Mover hacia adelante
-        moveDirection = transform.forward;
-        break;
-      case 1: // Mover hacia atrás
-        moveDirection = -transform.forward;
-        break;
-      case 2: // Mover hacia la izquierda
-        moveDirection = -transform.right;
-        break;
-      case 3: // Mover hacia la derecha
-        moveDirection = transform.right;
-        break;
-    }
 
     switch (attackRange)
     {
@@ -129,19 +115,19 @@ public class QEnemyAgent : Agent
     switch (chasingRange)
     {
       case 0:
-        enemyController.chasingRange = 8f;
+        enemyController.chasingRange = 6f;
         break;
       case 1:
-        enemyController.chasingRange = 9f;
+        enemyController.chasingRange = 8f;
         break;
       case 2:
         enemyController.chasingRange = 10f;
         break;
       case 3:
-        enemyController.chasingRange = 15f;
+        enemyController.chasingRange = 12f;
         break;
       case 4:
-        enemyController.chasingRange = 20f;
+        enemyController.chasingRange = 14f;
         break;
     }
 
@@ -167,9 +153,9 @@ public class QEnemyAgent : Agent
     if (state == 0)
     {
       enemyController.enemyAnimator.SetBool("isMoving", true);
-      if (Vector3.Distance(transform.position, player.transform.position) >= chasingRange)
+      if (Vector3.Distance(transform.position, player.transform.position) >= enemyController.chasingRange)
       {
-        transform.position += moveDirection * Time.deltaTime * 1f;
+        transform.position += new Vector3(moveX, 0f, moveZ) * (Time.deltaTime * 1f);
       }
     }
     else if (state == 1)
@@ -250,7 +236,6 @@ public class QEnemyAgent : Agent
     }
 
     //SI EL JUGADOR SE MUERE
-    Debug.Log(episodeTime);
     if (playerCombatController.playerStats.health <= 0)
     {
       //SI EL JUGADOR SE MUERE MUY RAPIDO
@@ -299,7 +284,7 @@ public class QEnemyAgent : Agent
     //Reset Triggers
     enemyController._attackState = AttackStates.NO_ATTACK;
 
-    if (episodeTime >= 300f && playerCombatController.playerStats.health > 0)
+    if (episodeTime >= 210f && playerCombatController.playerStats.health > 0)
     {
       SetReward(-30f);
       EndEpisode();

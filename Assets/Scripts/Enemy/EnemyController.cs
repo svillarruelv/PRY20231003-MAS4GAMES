@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
   public bool isAgent = false;
 
   [SerializeField]
-  private Slider healthBar;
+  public Slider healthBar;
   public StatsData GetStatsData()
   {
     return enemyStats;
@@ -76,7 +76,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
       transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
     }
 
-    if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange)
+    if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange && !isAttacking)
     {
       // BUSCA AL JUGADOR
       enemyAnimator.SetBool("isMoving", true);
@@ -155,6 +155,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     healthBar.value -= damage;
     enemyStats.health -= damage;
     enemyAnimator.SetBool("isHit", true);
+
     if (isAttacking) StopCoroutine(attackCoroutine);
     player.GetComponent<CombatController>().playerStats.points += 10; // Player gets 10 points for attacking the enemy
     player.GetComponent<CombatController>().UpdateScoreText();
@@ -185,11 +186,14 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                           this.GetComponent<IStatsDataProvider>(),
                                           player.GetComponent<IStatsDataProvider>());
 #endif
-      GetComponent<Collider>().enabled = false;
-      enemyAnimator.SetBool("isDead", true);
-      player = null;
       audioSource.PlayOneShot(deathSound);
-      Destroy(gameObject, 4f);
+      if (!isAgent)
+      {
+        enemyAnimator.SetBool("isDead", true);
+        GetComponent<Collider>().enabled = false;
+        player = null;
+        Destroy(gameObject, 4f);
+      }
     }
   }
 }
