@@ -102,17 +102,6 @@ public class QEnemyAgent : Agent
         break;
     }
 
-    if (state == 0)
-    {
-      enemyController.enemyAnimator.SetBool("isMoving", true);
-      transform.position += moveDirection * Time.deltaTime * 1f;
-    }
-    else if (state == 1)
-    {
-      enemyController.enemyAnimator.SetBool("isMoving", false);
-      enemyController.Attack();
-    }
-
     switch (attackRange)
     {
       case 0:
@@ -135,10 +124,10 @@ public class QEnemyAgent : Agent
     switch (chasingRange)
     {
       case 0:
-        enemyController.chasingRange = 5f;
+        enemyController.chasingRange = 8f;
         break;
       case 1:
-        enemyController.chasingRange = 8f;
+        enemyController.chasingRange = 9f;
         break;
       case 2:
         enemyController.chasingRange = 10f;
@@ -154,10 +143,10 @@ public class QEnemyAgent : Agent
     switch (speedRange)
     {
       case 0:
-        enemyController.speedRange = 0.005f;
+        enemyController.speedRange = 0.006f;
         break;
       case 1:
-        enemyController.speedRange = 0.007f;
+        enemyController.speedRange = 0.008f;
         break;
       case 2:
         enemyController.speedRange = 0.009f;
@@ -168,6 +157,21 @@ public class QEnemyAgent : Agent
       case 4:
         enemyController.speedRange = 0.013f;
         break;
+    }
+
+    if (state == 0)
+    {
+      enemyController.enemyAnimator.SetBool("isMoving", true);
+      if (Vector3.Distance(transform.position, player.transform.position) >= chasingRange)
+      {
+        Debug.Log(Vector3.Distance(transform.position, player.transform.position));
+        transform.position += moveDirection * Time.deltaTime * 1f;
+      }
+    }
+    else if (state == 1)
+    {
+      enemyController.enemyAnimator.SetBool("isMoving", false);
+      enemyController.Attack();
     }
 
     // Actualizar el estado y la acción previa

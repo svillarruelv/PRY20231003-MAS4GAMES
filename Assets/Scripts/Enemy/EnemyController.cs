@@ -73,7 +73,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
       transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
     }
 
-    if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange && !isAttacking)
+    if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange)
     {
       // BUSCA AL JUGADOR
       enemyAnimator.SetBool("isMoving", true);
@@ -100,17 +100,20 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
   {
     var playerToHit = player;
 
-    isAttacking = true;
-    enemyStats.HitAttempt();
-    enemyAnimator.SetBool("isAttacking", true);
-
-    attackCoroutine = StartCoroutine(AttackCoroutine(playerToHit));
-
-    StartCoroutine(Utility.TimedEvent(() =>
+    if (!isAttacking)
     {
-      isAttacking = false;
-      StopCoroutine(attackCoroutine);
-    }, 2.5f));
+      isAttacking = true;
+      enemyStats.HitAttempt();
+      enemyAnimator.SetBool("isAttacking", true);
+
+      attackCoroutine = StartCoroutine(AttackCoroutine(playerToHit));
+
+      StartCoroutine(Utility.TimedEvent(() =>
+      {
+        isAttacking = false;
+        StopCoroutine(attackCoroutine);
+      }, 2.5f));
+    }
   }
 
   private IEnumerator AttackCoroutine(GameObject playerToHit)
