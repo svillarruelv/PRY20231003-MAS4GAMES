@@ -272,9 +272,17 @@ public class QEnemyAgent : Agent
       EndEpisode();
     }
 
+    //Enemy's health rewards
     if (enemyController.enemyStats.health <= 0)
     {
-      SetReward(-10f);
+      //IF the enemy died too fast
+      if (episodeTime <= 30f)
+      {
+        reward -= 10f;
+      }
+      reward -= 10f;
+
+      SetReward(reward);
       EndEpisode();
     }
 
