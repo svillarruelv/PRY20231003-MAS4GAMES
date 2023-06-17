@@ -299,6 +299,11 @@ public class QEnemyAgent : Agent
     //Reset Triggers
     enemyController._attackState = AttackStates.NO_ATTACK;
 
+    if (episodeTime >= 300f && playerCombatController.playerStats.health > 0)
+    {
+      SetReward(-30f);
+      EndEpisode();
+    }
 
     return reward;
   }
