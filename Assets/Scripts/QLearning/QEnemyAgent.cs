@@ -4,7 +4,7 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
-
+using MyEnums;
 public class QEnemyAgent : Agent
 {
   public enum ActionType { ATTACK, BLOCK, MOVE, DODGE, DRINK_POTION, HURT }; // Actions for the file content
@@ -257,6 +257,18 @@ public class QEnemyAgent : Agent
       EndEpisode();
     }
 
+    //Attack rewards
+    switch (enemyController._attackState)
+    {
+      case AttackStates.SUCCESS:
+        reward += 5f;
+        break;
+      case AttackStates.FAIL:
+        reward -= 10f;
+        break;
+    }
+    //Reset Triggers
+    enemyController._attackState = AttackStates.NO_ATTACK;
     return reward;
   }
 

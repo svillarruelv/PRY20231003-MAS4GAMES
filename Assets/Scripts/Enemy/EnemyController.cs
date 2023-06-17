@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using MyEnums;
+
 public class EnemyController : MonoBehaviour, IStatsDataProvider
 {
+  public AttackStates _attackState; //Outcome
   private AudioSource audioSource;
   public AudioClip hurtSound;
   public AudioClip deathSound;
@@ -59,7 +62,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     healthBar.value = enemyStats.health;
 
     attackRange = weapon.GetComponent<WeaponController>().weaponData.range;
-
+    _attackState = AttackStates.NO_ATTACK;
   }
 
   void Update()
@@ -130,7 +133,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                       this.GetComponent<IStatsDataProvider>(),
                                       playerToHit.GetComponent<IStatsDataProvider>());
 #endif
-
+      _attackState = AttackStates.SUCCESS;
       playerToHit.GetComponent<CombatController>().TakeDamage(damage, this);
     }
 #if UNITY_EDITOR
@@ -141,6 +144,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                       FileManager.CharacterType.ENEMY,
                                       this.GetComponent<IStatsDataProvider>(),
                                       playerToHit.GetComponent<IStatsDataProvider>());
+      _attackState = AttackStates.FAIL;
     }
 #endif
 
