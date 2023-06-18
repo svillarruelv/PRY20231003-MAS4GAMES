@@ -134,6 +134,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                       playerToHit.GetComponent<IStatsDataProvider>());
 #endif
       _attackState = AttackStates.SUCCESS;
+
       playerToHit.GetComponent<CombatController>().TakeDamage(damage, this);
     }
 #if UNITY_EDITOR

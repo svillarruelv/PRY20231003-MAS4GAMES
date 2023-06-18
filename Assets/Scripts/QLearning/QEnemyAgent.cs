@@ -8,7 +8,6 @@ using MyEnums;
 public class QEnemyAgent : Agent
 {
   private float episodeTime;
-  public enum ActionType { ATTACK, BLOCK, MOVE, DODGE, DRINK_POTION, HURT }; // Actions for the file content
   public GameObject player;
   private EnemyController enemyController;
   private CombatController playerCombatController;
@@ -19,6 +18,8 @@ public class QEnemyAgent : Agent
   private float discountFactor = 0.99f; //Discount Factor
   private int state;
   private int action;
+  float rewardPerEpisode = 0f;
+
 
   public override void Initialize()
   {
@@ -26,7 +27,7 @@ public class QEnemyAgent : Agent
     playerCombatController = enemyController.player.GetComponent<CombatController>();
 
     // Inicializar la QTable con valores aleatorios
-    int numStates = 5; // Número de estados
+    int numStates = 2; // Número de estados
     int numActions = 2; // Número de acciones (moverse, atacar)
     QTable = new float[numStates][];
     for (int i = 0; i < numStates; i++)
@@ -41,16 +42,23 @@ public class QEnemyAgent : Agent
 
   public override void OnEpisodeBegin()
   {
-    // Restablecer la salud del enemigo a 100
-    enemyController.transform.position = new Vector3(0f, 0f, 10f);
+
+    // RESET ENEMY ATTRS
+    enemyController.transform.position = new Vector3(0f, 0f, 15f);
     enemyController.enemyStats.health = 100;
     enemyController.healthBar.value = 100;
     enemyController.enemyStats.accuracy = 0;
     enemyController.isAgent = true;
     enemyController.player = player;
+
+    // RESET PLAYER ATTRS
     playerCombatController.playerStats.health = 100;
     playerCombatController.healthBar.value = 100;
     playerCombatController.isTraining = true;
+
+    // RESET LOGIC
+    Debug.Log($"rewardPerEpisode -> {rewardPerEpisode}");
+    rewardPerEpisode = 0f;
     episodeTime = 0f;
   }
 
@@ -171,7 +179,7 @@ public class QEnemyAgent : Agent
 
     // Calcular la recompensa en base al cambio de estado
     float reward = CalculateReward();
-    SetReward(reward);
+    rewardPerEpisode += reward;
     // Actualizar la QTable
     QTable[previousState][previousAction] += learningRate * (reward + discountFactor * GetMaxQValue(state) - QTable[previousState][previousAction]);
   }
@@ -217,21 +225,24 @@ public class QEnemyAgent : Agent
     float distanceToPlayer = Vector3.Distance(playerPosition, enemyPosition);
 
     // Calcular la recompensa basada en la diferencia entre la distancia actual y la distancia objetivo
-    if (distanceToPlayer < 15f)
+    if (distanceToPlayer <= 14f)
     {
-      reward += 10f;
+      reward += 14f / distanceToPlayer;
+      AddReward(14f / distanceToPlayer);
     }
     else
     {
       // El enemigo está lejos del jugador (comportamiento no deseado)
-      reward -= -1f;
+      reward += distanceToPlayer * -0.1f;
+      AddReward(distanceToPlayer * -0.1f);
     }
 
     // Verificar colisiones con montañas
     if (CheckMountainCollision())
     {
       // Aplicar recompensa negativa y finalizar el episodio
-      SetReward(-10f);
+      reward += -100f;
+      AddReward(-100f);
       EndEpisode();
     }
 
@@ -241,19 +252,21 @@ public class QEnemyAgent : Agent
       //SI EL JUGADOR SE MUERE MUY RAPIDO
       if (episodeTime <= 30f)
       {
-        reward -= 10f;
+        reward += -10f;
+        AddReward(-10f);
       }
       // SI EL JUGADOR SE MUERE EN UN INTERVALO ACEPTABLE
       else if (30f < episodeTime && episodeTime <= 180f)
       {
         reward += 10f;
+        AddReward(10f);
       }
       // SI EL JUGADOR SE DEMORA EN MORIR
       else if (180f < episodeTime)
       {
-        reward -= 10f;
+        reward += 10f;
+        AddReward(10f);
       }
-      SetReward(reward);
       EndEpisode();
     }
 
@@ -263,11 +276,12 @@ public class QEnemyAgent : Agent
       //IF the enemy died too fast
       if (episodeTime <= 30f)
       {
-        reward -= 10f;
+        reward += -10f;
+        AddReward(-10f);
       }
-      reward -= 10f;
+      reward += -10f;
+      AddReward(-10f);
 
-      SetReward(reward);
       EndEpisode();
     }
 
@@ -276,17 +290,22 @@ public class QEnemyAgent : Agent
     {
       case AttackStates.SUCCESS:
         reward += 5f;
+        AddReward(5f);
+        enemyController._attackState = AttackStates.NO_ATTACK;
         break;
       case AttackStates.FAIL:
-        reward -= 10f;
+        reward += -10f;
+        AddReward(-10f);
+        enemyController._attackState = AttackStates.NO_ATTACK;
+        break;
+      default:
         break;
     }
-    //Reset Triggers
-    enemyController._attackState = AttackStates.NO_ATTACK;
 
     if (episodeTime >= 210f && playerCombatController.playerStats.health > 0)
     {
-      SetReward(-30f);
+      reward += -30f;
+      AddReward(-30f);
       EndEpisode();
     }
 
