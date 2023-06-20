@@ -96,11 +96,11 @@ public class QEnemyAgent : Agent
     float moveZ = actions.ContinuousActions[1];
 
     // Acciones discretas del agente
-    int state = actions.DiscreteActions[0]; // State: isMoving, isAttacking, isIddle
-    int attackRange = actions.DiscreteActions[1]; //5
-    int chasingRange = actions.DiscreteActions[2]; //5
-    int speedRange = actions.DiscreteActions[3]; //5
-    int action = actions.DiscreteActions[3]; // Action: state, attackRange, chasingRange, speedRange
+    int state = actions.DiscreteActions[0]; // State: isMoving, isAttacking
+    int action = actions.DiscreteActions[1]; // Action: attackRange, chasingRange, speedRange
+    int attackRange = actions.DiscreteActions[2];
+    int chasingRange = actions.DiscreteActions[3];
+    int speedRange = actions.DiscreteActions[4];
 
     if (state == 0)
     {
