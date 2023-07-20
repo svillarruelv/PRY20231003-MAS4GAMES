@@ -28,6 +28,7 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
 
   public Slider healthBar;
   public TMPro.TextMeshProUGUI uiText;
+  public bool isTraining = false;
 
   public StatsData GetStatsData()
   {
@@ -127,7 +128,6 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
       healthBar.value -= damage;
       playerStats.health -= damage;
       movementController.characterAnimator.SetBool("isHit", true);
-
       audioSource.PlayOneShot(hurtSound);
 #if UNITY_EDITOR
       //Record that the character was hurt
@@ -139,7 +139,10 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
 #endif
       if (playerStats.health <= 0)
       {
+        if (!isTraining)
+        {
 #if UNITY_EDITOR
+
         //Record that the player was killed
         FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
                                             FileManager.ActionResult.DEAD,
@@ -147,8 +150,15 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
                                             this.GetComponent<IStatsDataProvider>(),
                                             enemy.GetComponent<IStatsDataProvider>());
 #endif
-        movementController.characterAnimator.SetBool("isDead", true);
-        CanvasManager.instance.Wasted();
+          movementController.characterAnimator.SetBool("isDead", true);
+          CanvasManager.instance.Wasted();
+        }
+        else
+        {
+          playerStats.health = 0;
+          healthBar.value = 0;
+        }
+
       }
     }
   }

@@ -3,29 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using MyEnums;
+
 public class EnemyController : MonoBehaviour, IStatsDataProvider
 {
+  public AttackStates _attackState; //Outcome
   private AudioSource audioSource;
   public AudioClip hurtSound;
   public AudioClip deathSound;
 
   public StatsData enemyStats = new StatsData();
 
-  private Animator enemyAnimator;
+  public Animator enemyAnimator;
 
   [SerializeField]
   private GameObject weapon;
-  private float chasingRange = 10f;
-  private float attackRange;
+  public float chasingRange = 10f;
+  public float attackRange = 3f;
+  public float speedRange = 0.009f;
   private int damage;
 
   public GameObject player;
-  private bool isAttacking = false;
+  public bool isAttacking = false;
   private Coroutine attackCoroutine;
+  public bool isAgent = false;
 
   [SerializeField]
-  private Slider healthBar;
-
+  public Slider healthBar;
   public StatsData GetStatsData()
   {
     return enemyStats;
@@ -58,7 +62,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     healthBar.value = enemyStats.health;
 
     attackRange = weapon.GetComponent<WeaponController>().weaponData.range;
-    // damage = weapon.GetComponent<WeaponController>().weaponData.damage;
+    _attackState = AttackStates.NO_ATTACK;
   }
 
   void Update()
@@ -67,7 +71,6 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
     healthBar.gameObject.SetActive(true);
     healthBar.transform.LookAt(new Vector3(player.transform.position.x, healthBar.transform.position.y, player.transform.position.z));
-
     if (Vector3.Distance(transform.position, player.transform.position) < chasingRange)
     {
       transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
@@ -76,39 +79,44 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange && !isAttacking)
     {
       // BUSCA AL JUGADOR
-
-      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), 0.009f);
+      enemyAnimator.SetBool("isMoving", true);
+      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), speedRange);
 
 #if UNITY_EDITOR
-      // Record that the enemy is moving
-      FileManager.Instance.WriteAction(FileManager.ActionType.MOVE,
-                                          FileManager.ActionResult.SUCCESS,
-                                          FileManager.CharacterType.ENEMY,
-                                          this.GetComponent<IStatsDataProvider>(),
-                                          player.GetComponent<IStatsDataProvider>());
+        // Record that the enemy is moving
+        FileManager.Instance.WriteAction(FileManager.ActionType.MOVE,
+                                            FileManager.ActionResult.SUCCESS,
+                                            FileManager.CharacterType.ENEMY,
+                                            this.GetComponent<IStatsDataProvider>(),
+                                            player.GetComponent<IStatsDataProvider>());
 #endif
     }
     else if (!isAttacking && Vector3.Distance(transform.position, player.transform.position) <= attackRange)
     {
+      enemyAnimator.SetBool("isMoving", false);
       Attack();
     }
+
   }
 
-  private void Attack()
+  public void Attack()
   {
     var playerToHit = player;
 
-    isAttacking = true;
-    enemyStats.HitAttempt();
-    enemyAnimator.SetBool("isAttacking", true);
-
-    attackCoroutine = StartCoroutine(AttackCoroutine(playerToHit));
-
-    StartCoroutine(Utility.TimedEvent(() =>
+    if (!isAttacking)
     {
-      isAttacking = false;
-      StopCoroutine(attackCoroutine);
-    }, 2.5f));
+      isAttacking = true;
+      enemyStats.HitAttempt();
+      enemyAnimator.SetBool("isAttacking", true);
+
+      attackCoroutine = StartCoroutine(AttackCoroutine(playerToHit));
+
+      StartCoroutine(Utility.TimedEvent(() =>
+      {
+        isAttacking = false;
+        StopCoroutine(attackCoroutine);
+      }, 2.5f));
+    }
   }
 
   private IEnumerator AttackCoroutine(GameObject playerToHit)
@@ -125,6 +133,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                       this.GetComponent<IStatsDataProvider>(),
                                       playerToHit.GetComponent<IStatsDataProvider>());
 #endif
+      _attackState = AttackStates.SUCCESS;
 
       playerToHit.GetComponent<CombatController>().TakeDamage(damage, this);
     }
@@ -136,6 +145,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                       FileManager.CharacterType.ENEMY,
                                       this.GetComponent<IStatsDataProvider>(),
                                       playerToHit.GetComponent<IStatsDataProvider>());
+      _attackState = AttackStates.FAIL;
     }
 #endif
 
@@ -146,6 +156,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     healthBar.value -= damage;
     enemyStats.health -= damage;
     enemyAnimator.SetBool("isHit", true);
+
     if (isAttacking) StopCoroutine(attackCoroutine);
     player.GetComponent<CombatController>().playerStats.points += 10; // Player gets 10 points for attacking the enemy
     player.GetComponent<CombatController>().UpdateScoreText();
@@ -176,11 +187,14 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
                                           this.GetComponent<IStatsDataProvider>(),
                                           player.GetComponent<IStatsDataProvider>());
 #endif
-      GetComponent<Collider>().enabled = false;
-      enemyAnimator.SetBool("isDead", true);
-      player = null;
       audioSource.PlayOneShot(deathSound);
-      Destroy(gameObject, 4f);
+      if (!isAgent)
+      {
+        enemyAnimator.SetBool("isDead", true);
+        GetComponent<Collider>().enabled = false;
+        player = null;
+        Destroy(gameObject, 4f);
+      }
     }
   }
 }
