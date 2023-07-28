@@ -192,6 +192,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
       {
         enemyAnimator.SetBool("isDead", true);
         GetComponent<Collider>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
         player = null;
         Destroy(gameObject, 4f);
       }
