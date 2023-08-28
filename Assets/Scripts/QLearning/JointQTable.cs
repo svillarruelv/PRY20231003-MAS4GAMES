@@ -37,29 +37,21 @@ public class JointQTable
   //Function to fusion the QTables from the agents to the QTable 
   public void FusionQTables(float[][] table)
   {
-    //Get the dimnsion of both matrices
-    int rowsTable = table.Length;
-    int rowsQTable = this.QTable.Length;
-    int columnsTable = table[0].Length;
-    int columnsQTable = this.QTable[0].Length;
+    //Get dimensions of the matrix
+    int rows = table.Length;
+    int cols = table[0].Length;
 
-    //Create temporary new matrix/Table
-    float[][] updated_QTable = new float[rowsTable + rowsQTable][];
-
-    //Add the data of table A in the temporary table
-    for (int i = 0; i < rowsTable; i++)
-    {
-      updated_QTable[i] = new float[columnsTable];
-      Array.Copy(table[i], updated_QTable[i], columnsTable);
+    float[][] temp = new float[cols][]; //Temporary matrix that will store the modified values
+	
+    for (int i = 0; i < cols; i++) {
+        temp[i] = new float[rows]; //For each column create a row
+		
+        for (int j = 0; j < rows; j++) {
+            float median = Median(table[j][i], QTable[j][i]); //Get the median value of both tables
+            temp[i][j] = median; //Update the temporary matrix
+        }
     }
 
-    //Add the data of QTable to the temporary table
-    for (int i = 0; i < columnsQTable; i++)
-    {
-      updated_QTable[columnsTable + i] = new float[columnsQTable];
-      Array.Copy(QTable[i], updated_QTable[columnsTable + i], columnsQTable);
-    }
-
-    this.QTable = updated_QTable;
+    this.QTable = temp; //QTable = Temporary matrix
   }
 }
