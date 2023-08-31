@@ -60,6 +60,14 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
     healthBar.value = playerStats.health;
 
     playerStats.id = 0;
+
+    JointQData data = SaveSystem.LoadQTable();
+    if (data != null)
+    {
+      playerStats.points = data.score;
+      UpdateScoreText();
+    }
+
     movementController = GetComponent<MovementController>();
   }
 
@@ -139,6 +147,7 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
 #endif
       if (playerStats.health <= 0)
       {
+        SaveSystem.SaveQTable(playerStats.points);
         if (!isTraining)
         {
 #if UNITY_EDITOR

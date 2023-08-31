@@ -7,6 +7,7 @@ public class EnemySpawner : MonoBehaviour
 {
   public GameObject enemyPrefab;
   public GameObject playerObject;
+  public PotionSpawner potionSpawner;
 
   public Transform[] spawnPoints;
   public int maxEnemiesPerSpawnPoint = 1;
@@ -25,6 +26,7 @@ public class EnemySpawner : MonoBehaviour
     if (areEnemiesDefeated && !areSpawning)
     {
       areSpawning = true;
+      potionSpawner.SpawnPotions();
       StartCoroutine(SpawnNewEnemiesCoroutine());
       Debug.Log($"New horde #{hordeNumber}");
     }
