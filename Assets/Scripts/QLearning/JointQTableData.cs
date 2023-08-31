@@ -10,10 +10,12 @@ public class JointQData
   float n; //filas
   float m; //columnas
   public int score; //Variable prueba
+  public string filepath;
 
-  public JointQData(int score)
+  public JointQData(int score, string filepath)
   {
     this.score = score;
+    this.filepath = filepath;
   }
 
   //Constructor para llenar los datos de la JointQTable

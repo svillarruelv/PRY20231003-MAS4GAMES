@@ -2,12 +2,14 @@ using System;
 public class JointQTable
 {
   public float[][] QTable; //Common knowledge table for all agents
+  public string filepath; //Filepath where the table is stored
 
   //Function to load the data
   /*   public void LoadData()
     {
       JointQData data = SaveSystem.LoadQTable(); //Load the data
       this.QTable = data.QTable; //Use the loaded data
+      this.filepath = data.filepath
     }
 
     //Function to save the data
@@ -42,14 +44,16 @@ public class JointQTable
     int cols = table[0].Length;
 
     float[][] temp = new float[cols][]; //Temporary matrix that will store the modified values
-	
-    for (int i = 0; i < cols; i++) {
-        temp[i] = new float[rows]; //For each column create a row
-		
-        for (int j = 0; j < rows; j++) {
-            float median = Median(table[j][i], QTable[j][i]); //Get the median value of both tables
-            temp[i][j] = median; //Update the temporary matrix
-        }
+
+    for (int i = 0; i < cols; i++)
+    {
+      temp[i] = new float[rows]; //For each column create a row
+
+      for (int j = 0; j < rows; j++)
+      {
+        float median = Median(table[j][i], QTable[j][i]); //Get the median value of both tables
+        temp[i][j] = median; //Update the temporary matrix
+      }
     }
 
     this.QTable = temp; //QTable = Temporary matrix

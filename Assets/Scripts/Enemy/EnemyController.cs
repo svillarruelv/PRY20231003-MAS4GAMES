@@ -80,6 +80,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     {
       // BUSCA AL JUGADOR
       enemyAnimator.SetBool("isMoving", true);
+      this.isChasing = true;
       transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), speedRange);
 
 #if UNITY_EDITOR
@@ -94,9 +95,27 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     else if (!isAttacking && Vector3.Distance(transform.position, player.transform.position) <= attackRange)
     {
       enemyAnimator.SetBool("isMoving", false);
+      this.isChasing = false;
       Attack();
     }
 
+
+  }
+
+  public int getStatus()
+  {
+    if (isAttacking)
+    {
+      return 2;
+    }
+    else if (enemyAnimator.GetBool("isMoving"))
+    {
+      return 1;
+    }
+    else
+    {
+      return 0; //IDLE
+    }
   }
 
   public void Attack()

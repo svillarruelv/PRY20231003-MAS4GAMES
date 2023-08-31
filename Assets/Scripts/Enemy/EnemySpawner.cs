@@ -14,6 +14,8 @@ public class EnemySpawner : MonoBehaviour
   private bool areEnemiesDefeated = false;
   private bool areSpawning = false;
   public int hordeNumber = 1;
+  public float mean_death_time = 0f;
+  private int total_enemies;
 
   private void Start()
   {
@@ -23,6 +25,8 @@ public class EnemySpawner : MonoBehaviour
 
   private void Update()
   {
+    this.mean_death_time += Time.deltaTime;
+
     if (areEnemiesDefeated && !areSpawning)
     {
       areSpawning = true;
@@ -40,6 +44,7 @@ public class EnemySpawner : MonoBehaviour
       for (int i = 0; i < maxEnemiesPerSpawnPoint; i++)
       {
         SpawnEnemy(spawnPoint);
+        this.total_enemies += 1;
       }
     }
   }
@@ -85,6 +90,8 @@ public class EnemySpawner : MonoBehaviour
     if (GetEnemyCount() == 0)
     {
       areEnemiesDefeated = true;
+      this.mean_death_time /= this.total_enemies;
+      this.total_enemies = 0;
     }
   }
 

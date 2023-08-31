@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary; //Librería para convertir
 
 public class SaveSystem
 {
+  public string path;
 
   //Función para guardar la QTable
   /*
@@ -23,6 +24,7 @@ public class SaveSystem
   public static JointQData LoadQTable()
   {
     string path = Application.persistentDataPath + "/savedata.txt"; //Dirección donde se obtendrá el archivo
+    this.path = path;
     Debug.Log(path);
     if (File.Exists(path)) //Revisar que el archivo existe
     {
@@ -48,7 +50,7 @@ public class SaveSystem
     string path = Application.persistentDataPath + "/savedata.txt"; //Dirección donde se almacenará el archivo
     FileStream stream = new FileStream(path, FileMode.Create); //Crear el stream 
 
-    JointQData data = new JointQData(score); //Agregar los datos a la variable Data = datos a guardar
+    JointQData data = new JointQData(score, path); //Agregar los datos a la variable Data = datos a guardar
 
     formatter.Serialize(stream, data); //Escribir en el archivo los valores del stream y la data
     stream.Close(); //Cerrar el stream una vez que se terminó de escribir en el archivo
