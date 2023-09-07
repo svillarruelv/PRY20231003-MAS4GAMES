@@ -25,6 +25,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
   public GameObject player;
   public bool isAttacking = false;
+  public bool isChasing = false;
   private Coroutine attackCoroutine;
   public bool isAgent = false;
 

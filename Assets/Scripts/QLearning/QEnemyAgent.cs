@@ -1,11 +1,11 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MyEnums;
 
-public class QEnemyAgent
+public class QEnemyAgent : MonoBehaviour
 {
-  private float episodeTime;
   public GameObject player;
   private EnemyController enemyController;
   private CombatController playerCombatController;
@@ -19,17 +19,19 @@ public class QEnemyAgent
   private int state; //Estado
   private int action; //Acción
   float rewardPerEpisode = 0f; //Recompensa
+  float reward = 0f; //Recompensa
+
   private float episodeTime = 0f; //Tiempo del episodio de entrenamiento
 
   JointQTable JointQTable = new JointQTable(); //Joint QTable: tabla con la información/conocimiento de todos los agentes
 
   //Metrics:
-  private int player_health;
+  private float player_health;
   private int player_score;
   private int enemy_health;
   private float enemy_accuracy;
 
-  public override void Start()
+  public void Start()
   {
     enemyController = GetComponent<EnemyController>();
     playerCombatController = enemyController.player.GetComponent<CombatController>();
@@ -43,12 +45,12 @@ public class QEnemyAgent
 
     for (int i = 0; i < numStates; i++)
     {
-      QTable[i] = new float[numActions];
+      this.QTable[i] = new float[numActions];
       for (int j = 0; j < numActions; j++)
       {
         //QTable[i][j] = Random.Range(-1f, 1f);
         //Valores: 0 = inicial, != 0 = Recompensa de la acción
-        QTable[i][j] = 0;
+        this.QTable[i][j] = 0;
         //QTable[i][j] = JointQTable[i][j];
       }
     }
@@ -56,7 +58,7 @@ public class QEnemyAgent
 
   void Update()
   {
-    while (playerCombatController.health != 0)
+    while (playerCombatController.playerStats.health != 0)
     {
       if (episodeTime == 0f)
       { //1st iteration
@@ -103,7 +105,7 @@ public class QEnemyAgent
     this.enemy_health = enemyController.enemyStats.health;
 
     //Actualizar la QTable considerando los valores de la tabla JointQ Table
-    QTable[state][action] += (1 - learningRate) * JointQTable[state][action] + learningRate * (reward + discountFactor * GetMaxQValue(state) - QTable[state][action]);
+    this.QTable[state][action] += (1 - learningRate) * JointQTable.QTable[state][action] + learningRate * (reward + discountFactor * GetMaxQValue(state) - QTable[state][action]);
     JointQTable.FusionQTables(QTable); //Fusion Agent QTable with the Global/Joint QTable
 
     reward += GetMaxQValue(state); //Update reward

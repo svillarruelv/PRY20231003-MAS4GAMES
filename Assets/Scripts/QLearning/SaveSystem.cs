@@ -4,8 +4,6 @@ using System.Runtime.Serialization.Formatters.Binary; //Librería para convertir
 
 public class SaveSystem
 {
-  public string path;
-
   //Función para guardar la QTable
   /*
   public static void SaveQTable (Joint_QTable joint_QTable) {
@@ -24,7 +22,6 @@ public class SaveSystem
   public static JointQData LoadQTable()
   {
     string path = Application.persistentDataPath + "/savedata.txt"; //Dirección donde se obtendrá el archivo
-    this.path = path;
     Debug.Log(path);
     if (File.Exists(path)) //Revisar que el archivo existe
     {
