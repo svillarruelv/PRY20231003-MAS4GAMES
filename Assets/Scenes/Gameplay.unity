@@ -17155,10 +17155,8 @@ GameObject:
   - component: {fileID: 1416394702603551310}
   - component: {fileID: 6179961374321314919}
   - component: {fileID: 8622308821261134237}
-  - component: {fileID: 9166498489932061011}
   - component: {fileID: 9166498489932061010}
   - component: {fileID: 9166498489932061009}
-  - component: {fileID: 9166498489932061008}
   - component: {fileID: 9166498489932061007}
   m_Layer: 9
   m_Name: Character
@@ -17206,20 +17204,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &9166498489932061008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9166498489928363142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffbdb74364a9f6244aeb0c2737ae504f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventorySize: 4
-  visualInventory: {fileID: 0}
 --- !u!114 &9166498489932061009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17256,24 +17240,6 @@ MonoBehaviour:
   environmentLayer:
     serializedVersion: 2
     m_Bits: 256
---- !u!114 &9166498489932061011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9166498489928363142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf02288373e025c4a9f80efc5a5c5e65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultAnimator: {fileID: 22100000, guid: 68593fba6c6938e49aa9349498e38b65, type: 2}
-  movementSpeed: 3
-  jumpSpeed: 8
-  gravity: 20
-  hand: {fileID: 292882544855161473}
-  _camera: {fileID: 5117709274240007441}
 --- !u!1 &9201433377436139193
 GameObject:
   m_ObjectHideFlags: 0

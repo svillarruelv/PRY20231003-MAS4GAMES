@@ -15,7 +15,6 @@ public class WeaponController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             ActivateUI();
-            other.GetComponent<MovementController>().availableItem = gameObject;
         }
     }
 
@@ -24,7 +23,6 @@ public class WeaponController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             ActivateUI();
-            other.GetComponent<MovementController>().availableItem = null;
         }
     }
 

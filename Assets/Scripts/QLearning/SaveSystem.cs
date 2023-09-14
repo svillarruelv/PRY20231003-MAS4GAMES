@@ -22,7 +22,6 @@ public class SaveSystem
   public static JointQData LoadQTable()
   {
     string path = Application.persistentDataPath + "/savedata.txt"; //Dirección donde se obtendrá el archivo
-    Debug.Log(path);
     if (File.Exists(path)) //Revisar que el archivo existe
     {
       BinaryFormatter formatter = new BinaryFormatter(); //Formateador del archivo a binario

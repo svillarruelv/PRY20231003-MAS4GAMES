@@ -9,8 +9,6 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
   public AudioClip hurtSound;
   public StatsData playerStats = new StatsData();
 
-  private MovementController movementController;
-
   [NonSerialized]
   public GameObject enemy = null;
 
@@ -68,12 +66,11 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
       UpdateScoreText();
     }
 
-    movementController = GetComponent<MovementController>();
   }
 
   void Update()
   {
-    if (Input.GetMouseButtonDown(0) && GetComponent<MovementController>().canMove)
+    if (Input.GetMouseButtonDown(0))
     {
       Attack();
     }
@@ -81,17 +78,10 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
     {
       Block();
     }
-    else if (Input.GetMouseButtonUp(1))
-    {
-      movementController.canMove = true;
-      movementController.characterAnimator.SetBool("isBlocking", false);
-    }
   }
 
   private void Attack()
   {
-    movementController.canMove = false;
-    movementController.characterAnimator.SetBool("isAttacking", true);
 
     if (weaponInHands)
     {
@@ -116,27 +106,19 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
         }, 1f));
       }
     }
-
-    StartCoroutine(Utility.TimedEvent(() =>
-    {
-      GetComponent<MovementController>().canMove = true;
-    }, 1.5f));
   }
 
   private void Block()
   {
-    movementController.canMove = false;
-    movementController.characterAnimator.SetBool("isBlocking", true);
+    Debug.Log("block");
   }
 
   public void TakeDamage(int damage, EnemyController enemy)
   {
-    if (!movementController.characterAnimator.GetBool("isBlocking"))
-    {
-      healthBar.value -= damage;
-      playerStats.health -= damage;
-      movementController.characterAnimator.SetBool("isHit", true);
-      audioSource.PlayOneShot(hurtSound);
+
+    healthBar.value -= damage;
+    playerStats.health -= damage;
+    audioSource.PlayOneShot(hurtSound);
 #if UNITY_EDITOR
       //Record that the character was hurt
       FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
@@ -145,11 +127,11 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
                                             this.GetComponent<IStatsDataProvider>(),
                                             enemy.GetComponent<IStatsDataProvider>());
 #endif
-      if (playerStats.health <= 0)
+    if (playerStats.health <= 0)
+    {
+      SaveSystem.SaveQTable(playerStats.points);
+      if (!isTraining)
       {
-        SaveSystem.SaveQTable(playerStats.points);
-        if (!isTraining)
-        {
 #if UNITY_EDITOR
 
         //Record that the player was killed
@@ -159,17 +141,16 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
                                             this.GetComponent<IStatsDataProvider>(),
                                             enemy.GetComponent<IStatsDataProvider>());
 #endif
-          movementController.characterAnimator.SetBool("isDead", true);
-          CanvasManager.instance.Wasted();
-        }
-        else
-        {
-          playerStats.health = 0;
-          healthBar.value = 0;
-        }
-
+        CanvasManager.instance.Wasted();
       }
+      else
+      {
+        playerStats.health = 0;
+        healthBar.value = 0;
+      }
+
     }
+
   }
 
   public void UpdateScoreText()
