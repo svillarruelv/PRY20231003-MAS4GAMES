@@ -1179,7 +1179,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: f4546e18d9e23e14682cabe0fe056e82, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0
+  m_Volume: 0.05
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -4319,7 +4319,6 @@ GameObject:
   - component: {fileID: 1140462757}
   - component: {fileID: 1140462756}
   - component: {fileID: 1140462755}
-  - component: {fileID: 1140462760}
   - component: {fileID: 1140462759}
   m_Layer: 5
   m_Name: Canvas
@@ -4425,20 +4424,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 271051459}
---- !u!114 &1140462760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1140462754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7052cd1e1f78bca43a048a7b01f8cea3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FileName: 
-  FilePath: 
 --- !u!1001 &1167098752
 PrefabInstance:
   m_ObjectHideFlags: 0
