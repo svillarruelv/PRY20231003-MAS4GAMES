@@ -119,28 +119,12 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
     healthBar.value -= damage;
     playerStats.health -= damage;
     audioSource.PlayOneShot(hurtSound);
-#if UNITY_EDITOR
-      //Record that the character was hurt
-      FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
-                                            FileManager.ActionResult.SUCCESS,
-                                            FileManager.CharacterType.PLAYER,
-                                            this.GetComponent<IStatsDataProvider>(),
-                                            enemy.GetComponent<IStatsDataProvider>());
-#endif
+
     if (playerStats.health <= 0)
     {
       SaveSystem.SaveQTable(playerStats.points);
       if (!isTraining)
       {
-#if UNITY_EDITOR
-
-        //Record that the player was killed
-        FileManager.Instance.WriteAction(FileManager.ActionType.HURT,
-                                            FileManager.ActionResult.DEAD,
-                                            FileManager.CharacterType.PLAYER,
-                                            this.GetComponent<IStatsDataProvider>(),
-                                            enemy.GetComponent<IStatsDataProvider>());
-#endif
         CanvasManager.instance.Wasted();
       }
       else

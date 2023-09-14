@@ -8,7 +8,6 @@ public class PotionSpawner : MonoBehaviour
   public GameObject potionPrefab;
   public Transform[] spawnPoints;
   public int maxPotionsPerSpawnPoint = 1;
-  private bool areSpawning = false;
 
   private void Start()
   {
