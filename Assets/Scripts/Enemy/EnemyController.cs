@@ -7,7 +7,7 @@ using MyEnums;
 
 public class EnemyController : MonoBehaviour, IStatsDataProvider
 {
-  public AttackStates _attackState; //Outcome
+  public AttackStates _attackState;
   private AudioSource audioSource;
   public AudioClip hurtSound;
   public AudioClip deathSound;
@@ -55,7 +55,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     {
       audioSource = gameObject.AddComponent<AudioSource>();
     }
-    // Small values for easier testing
+
     enemyStats.health = 100;
     damage = 10;
 
@@ -79,7 +79,6 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
     if (Vector3.Distance(transform.position, player.transform.position) > attackRange && Vector3.Distance(transform.position, player.transform.position) < chasingRange && !isAttacking)
     {
-      // BUSCA AL JUGADOR
       enemyAnimator.SetBool("isMoving", true);
       this.isChasing = true;
       transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), speedRange);
@@ -156,13 +155,13 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     enemyAnimator.SetBool("isHit", true);
 
     if (isAttacking) StopCoroutine(attackCoroutine);
-    player.GetComponent<CombatController>().playerStats.points += 10; // Player gets 10 points for attacking the enemy
+    player.GetComponent<CombatController>().playerStats.points += 10;
     player.GetComponent<CombatController>().UpdateScoreText();
     audioSource.PlayOneShot(hurtSound);
 
     if (enemyStats.health <= 0)
     {
-      player.GetComponent<CombatController>().playerStats.points += 100; // Player gets 100 points for killing the enemy
+      player.GetComponent<CombatController>().playerStats.points += 100;
       player.GetComponent<CombatController>().UpdateScoreText();
 
       audioSource.PlayOneShot(deathSound);
