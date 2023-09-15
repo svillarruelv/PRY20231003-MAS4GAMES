@@ -1,6 +1,6 @@
 using UnityEngine;
-using System.IO; //Librería para los archivos
-using System.Runtime.Serialization.Formatters.Binary; //Librería para convertir los archivos en binario
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class SaveSystem
 {
@@ -18,37 +18,35 @@ public class SaveSystem
   }
   */
 
-  //Función para cargar los datos de la QTable
   public static JointQData LoadQTable()
   {
-    string path = Application.persistentDataPath + "/savedata.txt"; //Dirección donde se obtendrá el archivo
-    if (File.Exists(path)) //Revisar que el archivo existe
+    string path = Application.persistentDataPath + "/savedata.txt";
+    if (File.Exists(path))
     {
-      BinaryFormatter formatter = new BinaryFormatter(); //Formateador del archivo a binario
-      FileStream stream = new FileStream(path, FileMode.Open); //Crear el stream que abrirá/leerá el archivo
+      BinaryFormatter formatter = new BinaryFormatter();
+      FileStream stream = new FileStream(path, FileMode.Open);
 
-      JointQData data = formatter.Deserialize(stream) as JointQData; //Decodificar y leer la data del archivo
-      stream.Close(); //Cerrar el stream
+      JointQData data = formatter.Deserialize(stream) as JointQData;
+      stream.Close();
 
       return data;
     }
-    else //Si el archivo no existe
+    else
     {
       return null;
     }
 
   }
 
-  //Función de prueba
   public static void SaveQTable(int score)
   {
-    BinaryFormatter formatter = new BinaryFormatter(); //Formateador del archivo a binario
-    string path = Application.persistentDataPath + "/savedata.txt"; //Dirección donde se almacenará el archivo
-    FileStream stream = new FileStream(path, FileMode.Create); //Crear el stream 
+    BinaryFormatter formatter = new BinaryFormatter();
+    string path = Application.persistentDataPath + "/savedata.txt";
+    FileStream stream = new FileStream(path, FileMode.Create);
 
-    JointQData data = new JointQData(score, path); //Agregar los datos a la variable Data = datos a guardar
+    JointQData data = new JointQData(score, path);
 
-    formatter.Serialize(stream, data); //Escribir en el archivo los valores del stream y la data
-    stream.Close(); //Cerrar el stream una vez que se terminó de escribir en el archivo
+    formatter.Serialize(stream, data);
+    stream.Close();
   }
 }

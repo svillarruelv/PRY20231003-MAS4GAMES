@@ -53,7 +53,7 @@ public class EnemySpawner : MonoBehaviour
   {
     hordeNumber++;
     playerObject.GetComponent<CombatController>().playerStats.hordeNumber = hordeNumber;
-    yield return new WaitForSeconds(3f); // Esperar un frame extra antes de verificar si los enemigos están derrotados
+    yield return new WaitForSeconds(3f);
 
     foreach (Transform spawnPoint in spawnPoints)
     {
@@ -70,11 +70,8 @@ public class EnemySpawner : MonoBehaviour
   private void SpawnEnemy(Transform spawnPoint)
   {
     GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
-
-    // Obtener el componente EnemyController del objeto enemigo
     EnemyController enemyController = enemy.GetComponent<EnemyController>();
 
-    // Modificar la variable player
     enemyController.player = playerObject;
     enemyController.enemyStats.hordeNumber = hordeNumber;
   }

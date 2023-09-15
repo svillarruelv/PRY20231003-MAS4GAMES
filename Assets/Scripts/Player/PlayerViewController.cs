@@ -44,7 +44,6 @@ public class PlayerViewController : MonoBehaviour
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 Vector3 raycastPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
 
-                //Debug.DrawRay(raycastPosition, enemy.transform.position, Color.blue);
 
                 if (!Physics.Raycast(raycastPosition, direction, distance, environmentLayer))
                 {

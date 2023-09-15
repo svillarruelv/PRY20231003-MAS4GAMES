@@ -58,7 +58,7 @@ public class EnemyViewController : MonoBehaviour
                 {
                     enemyAnimator.SetBool("isSeeing", true);
                     isSeeing = true;
-                } 
+                }
                 else
                 {
                     enemyAnimator.SetBool("isSeeing", false);
