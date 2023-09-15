@@ -110,7 +110,7 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
 
   private void Block()
   {
-    Debug.Log("block");
+    int doSomething = 0;
   }
 
   public void TakeDamage(int damage, EnemyController enemy)
