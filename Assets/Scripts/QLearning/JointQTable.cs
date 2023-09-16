@@ -1,61 +1,86 @@
 using System;
-public class JointQTable
+using System.IO;
+using UnityEngine;
+using System.Threading;
+
+public class JointQTable : MonoBehaviour
 {
-  public float[][] QTable; //Common knowledge table for all agents
-  public string filepath; //Filepath where the table is stored
+  private static JointQTable instance;
+  public static JointQTable Instance => instance;
 
-  //Function to load the data
-  /*   public void LoadData()
-    {
-      JointQData data = SaveSystem.LoadQTable(); //Load the data
-      this.QTable = data.QTable; //Use the loaded data
-      this.filepath = data.filepath
-    }
+  private float[,] qTable; // Common knowledge table for all agents
+  private bool isInitialized = false;
 
-    //Function to save the data
-    public void SaveData()
-    {
-      SaveSystem.SaveQTable(this.QTable); //Save the current data
-    }
-
-    //Function for the agents to access to the common knowledge table
-    public float GetQTable()
-    {
-      return this.QTable;
-    } */
-
-  float Median(float a, float b)
+  private void Awake()
   {
-    float median = 0;
+    if (instance != null && instance != this)
+    {
+      Destroy(this.gameObject);
+    }
+    else
+    {
+      instance = this;
+      DontDestroyOnLoad(gameObject);
 
-    float[] values = new float[] { a, b };
-    Array.Sort(values);
-
-    median = (values[values.Length / 2 - 1] + values[values.Length / 2]) / 2f;
-
-    return median;
+      // Initialize qTable if it's not already initialized
+      if (!isInitialized)
+      {
+        InitializeQTable();
+        isInitialized = true;
+      }
+    }
   }
 
-  //Function to fusion the QTables from the agents to the QTable 
-  public void FusionQTables(float[][] table)
+  public static void Initialize()
   {
-    //Get dimensions of the matrix
-    int rows = table.Length;
-    int cols = table[0].Length;
+    if (instance == null)
+    {
+      GameObject jointQTableObject = new GameObject("JointQTable");
+      instance = jointQTableObject.AddComponent<JointQTable>();
+    }
+  }
 
-    float[][] temp = new float[cols][]; //Temporary matrix that will store the modified values
+  private void InitializeQTable()
+  {
+    int numStates = 3;
+    int numActions = 9;
+    qTable = new float[numStates, numActions];
+
+    for (int i = 0; i < numStates; i++)
+    {
+      for (int j = 0; j < numActions; j++)
+      {
+        qTable[i, j] = 0;
+      }
+    }
+  }
+
+  public float GetQValue(int state, int action)
+  {
+    return qTable[state, action];
+  }
+
+  public void FusionQTables(float[,] newTable)
+  {
+    int rows = newTable.GetLength(0);
+    int cols = newTable.GetLength(1);
+
+    float[,] temp = new float[rows, cols];
 
     for (int i = 0; i < cols; i++)
     {
-      temp[i] = new float[rows]; //For each column create a row
-
       for (int j = 0; j < rows; j++)
       {
-        float median = Median(table[j][i], QTable[j][i]); //Get the median value of both tables
-        temp[i][j] = median; //Update the temporary matrix
+        float mean = (newTable[j, i] + qTable[j, i]) / 2;
+        temp[j, i] = Mathf.Clamp(mean, -1f, 1f);
       }
     }
 
-    this.QTable = temp; //QTable = Temporary matrix
+    qTable = temp;
+  }
+
+  public bool IsTableInitialized()
+  {
+    return isInitialized;
   }
 }

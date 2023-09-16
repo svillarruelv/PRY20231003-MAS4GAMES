@@ -28,6 +28,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
   public bool isChasing = false;
   private Coroutine attackCoroutine;
   public bool isAgent = false;
+  public float playerDistance = 0f;
 
   [SerializeField]
   public Slider healthBar;
@@ -69,7 +70,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
   void Update()
   {
     if (enemyStats.health <= 0) return;
-
+    playerDistance = Vector3.Distance(transform.position, player.transform.position);
     healthBar.gameObject.SetActive(true);
     healthBar.transform.LookAt(new Vector3(player.transform.position.x, healthBar.transform.position.y, player.transform.position.z));
     if (Vector3.Distance(transform.position, player.transform.position) < chasingRange)
@@ -93,7 +94,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
 
   }
 
-  public int getStatus()
+  public int getState()
   {
     if (isAttacking)
     {

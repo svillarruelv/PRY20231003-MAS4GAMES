@@ -70,6 +70,17 @@ public class FileManager : MonoBehaviour
     }
   }
 
+  public void WriteStep(int stepNumber, IStatsDataProvider character, float reward, float time)
+  {
+    StatsData characterData = character.GetStatsData();
+
+    string id = characterData.id.ToString();
+
+    string content = $"AGENT ID:{id} | ELAPSED TIME: {time} | STEP: {stepNumber} | EPISODE REWARD:{reward}";
+
+    WriteFile(content);
+  }
+
   public void WriteAction(ActionType _action, ActionResult _outcome, CharacterType _type, IStatsDataProvider character, IStatsDataProvider opponent)
   {
     string content;
