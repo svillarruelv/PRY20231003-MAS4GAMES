@@ -59,12 +59,12 @@ public class CombatController : MonoBehaviour, IStatsDataProvider
 
     playerStats.id = 0;
 
-    JointQData data = SaveSystem.LoadQTable();
-    if (data != null)
-    {
-      playerStats.points = data.score;
-      UpdateScoreText();
-    }
+    /*  JointQData data = SaveSystem.LoadQTable();
+     if (data != null)
+     {
+       playerStats.points = data.score;
+       UpdateScoreText();
+     } */
 
   }
 

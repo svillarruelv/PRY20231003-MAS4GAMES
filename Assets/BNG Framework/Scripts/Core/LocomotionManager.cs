@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace BNG {
-    public class LocomotionManager : MonoBehaviour {
+namespace BNG
+{
+    public class LocomotionManager : MonoBehaviour
+    {
 
         [Header("Locomotion Type")]
         /// <summary>
@@ -14,7 +16,8 @@ namespace BNG {
         public LocomotionType DefaultLocomotion = LocomotionType.Teleport;
 
         LocomotionType selectedLocomotion = LocomotionType.Teleport;
-        public LocomotionType SelectedLocomotion {
+        public LocomotionType SelectedLocomotion
+        {
             get { return selectedLocomotion; }
         }
 
@@ -36,87 +39,107 @@ namespace BNG {
         PlayerTeleport teleport;
         SmoothLocomotion smoothLocomotion;
 
-        void Start() {
+        void Start()
+        {
             player = GetComponentInChildren<BNGPlayerController>();
             teleport = GetComponentInChildren<PlayerTeleport>();
 
             // Load Locomotion Preference
-            if (LoadLocomotionFromPrefs) {
+            if (LoadLocomotionFromPrefs)
+            {
                 ChangeLocomotion(PlayerPrefs.GetInt("LocomotionSelection", 0) == 0 ? LocomotionType.Teleport : LocomotionType.SmoothLocomotion, false);
             }
-            else {
+            else
+            {
                 ChangeLocomotion(DefaultLocomotion, false);
             }
         }
 
         bool actionToggle = false;
 
-        void Update() {
+        void Update()
+        {
             // Make sure we don't double toggle our inputs
-            if(!actionToggle) {
+            if (!actionToggle)
+            {
                 CheckControllerToggleInput();
             }
 
             actionToggle = false;
         }
 
-        public virtual void CheckControllerToggleInput() {
+        public virtual void CheckControllerToggleInput()
+        {
             // Check for bound controller button
-            for (int x = 0; x < locomotionToggleInput.Count; x++) {
-                if (InputBridge.Instance.GetControllerBindingValue(locomotionToggleInput[x])) {
+            for (int x = 0; x < locomotionToggleInput.Count; x++)
+            {
+                if (InputBridge.Instance.GetControllerBindingValue(locomotionToggleInput[x]))
+                {
                     LocomotionToggle();
                 }
             }
         }
 
-        void OnEnable() {
-            if(LocomotionToggleAction) {
+        void OnEnable()
+        {
+            if (LocomotionToggleAction)
+            {
                 LocomotionToggleAction.action.Enable();
                 LocomotionToggleAction.action.performed += OnLocomotionToggle;
             }
         }
 
-        void OnDisable() {
-            if (LocomotionToggleAction) {
+        void OnDisable()
+        {
+            if (LocomotionToggleAction)
+            {
                 LocomotionToggleAction.action.Disable();
                 LocomotionToggleAction.action.performed -= OnLocomotionToggle;
             }
         }
 
-        public void OnLocomotionToggle(InputAction.CallbackContext context) {
+        public void OnLocomotionToggle(InputAction.CallbackContext context)
+        {
             actionToggle = true;
             LocomotionToggle();
         }
 
-        public void LocomotionToggle() {
+        public void LocomotionToggle()
+        {
             // Toggle the locomotion
-            ChangeLocomotion(SelectedLocomotion == LocomotionType.SmoothLocomotion ? LocomotionType.Teleport : LocomotionType.SmoothLocomotion, LoadLocomotionFromPrefs);
+            ChangeLocomotion(LocomotionType.SmoothLocomotion, LoadLocomotionFromPrefs);
         }
 
-        public void UpdateTeleportStatus() {
+        public void UpdateTeleportStatus()
+        {
             teleport.enabled = SelectedLocomotion == LocomotionType.Teleport;
         }
 
-        public void ChangeLocomotion(LocomotionType locomotionType, bool save) {
+        public void ChangeLocomotion(LocomotionType locomotionType, bool save)
+        {
             ChangeLocomotionType(locomotionType);
 
-            if (save) {
+            if (save)
+            {
                 PlayerPrefs.SetInt("LocomotionSelection", locomotionType == LocomotionType.Teleport ? 0 : 1);
             }
 
             UpdateTeleportStatus();
         }
 
-        public void ChangeLocomotionType(LocomotionType loc) {
+        public void ChangeLocomotionType(LocomotionType loc)
+        {
 
             selectedLocomotion = loc;
 
             // Make sure Smooth Locomotion is available
-            if (smoothLocomotion == null) {
+            if (smoothLocomotion == null)
+            {
                 smoothLocomotion = GetComponentInChildren<SmoothLocomotion>();
             }
 
-            if (teleport == null) {
+            if (teleport == null)
+            {
                 teleport = GetComponentInChildren<PlayerTeleport>();
             }
 
@@ -124,27 +147,35 @@ namespace BNG {
             toggleSmoothLocomotion(selectedLocomotion == LocomotionType.SmoothLocomotion);
         }
 
-        void toggleTeleport(bool enabled) {
-            if (enabled) {
+        void toggleTeleport(bool enabled)
+        {
+            if (enabled)
+            {
                 teleport.EnableTeleportation();
             }
-            else {
+            else
+            {
                 teleport.DisableTeleportation();
             }
         }
 
-        void toggleSmoothLocomotion(bool enabled) {
-            if (smoothLocomotion) {
+        void toggleSmoothLocomotion(bool enabled)
+        {
+            if (smoothLocomotion)
+            {
                 smoothLocomotion.enabled = enabled;
             }
         }
 
-        public void ToggleLocomotionType() {
+        public void ToggleLocomotionType()
+        {
             // Toggle based on last value
-            if (selectedLocomotion == LocomotionType.SmoothLocomotion) {
+            if (selectedLocomotion == LocomotionType.SmoothLocomotion)
+            {
                 ChangeLocomotionType(LocomotionType.Teleport);
             }
-            else {
+            else
+            {
                 ChangeLocomotionType(LocomotionType.SmoothLocomotion);
             }
         }
