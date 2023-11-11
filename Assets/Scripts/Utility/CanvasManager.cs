@@ -47,11 +47,7 @@ public class CanvasManager : MonoBehaviour
     {
       Time.timeScale = 1f;
       image.SetActive(false);
-#if UNITY_EDITOR
-      UnityEditor.EditorApplication.isPlaying = false;
-#else
-      Application.Quit();
-#endif
+      SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }, 0.8f));
   }
 

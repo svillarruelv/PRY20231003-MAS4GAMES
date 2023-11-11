@@ -2444,7 +2444,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputAction: {fileID: 4860515764186564299, guid: e39f4b35a6db18348b41eb0262520e69,
     type: 3}
+  Canvas: {fileID: 1140462754}
   ToggleObject: {fileID: 2101652782614717749}
+  Paused: 0
 --- !u!4 &556769744 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 881022847667941518, guid: 9bf6018d1335b0e47a3c20da159f235d,
@@ -9881,7 +9883,7 @@ MonoBehaviour:
   SupportsBothTouchPadAndJoystick: 0
   SupportsIndexTouch: 0
   SupportsThumbTouch: 0
-  ShowInputDebugger: 0
+  ShowInputDebugger: 1
 --- !u!114 &1247141267968857422
 MonoBehaviour:
   m_ObjectHideFlags: 0

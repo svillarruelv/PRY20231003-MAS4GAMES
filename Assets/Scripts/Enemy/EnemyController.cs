@@ -82,7 +82,7 @@ public class EnemyController : MonoBehaviour, IStatsDataProvider
     {
       enemyAnimator.SetBool("isMoving", true);
       this.isChasing = true;
-      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), speedRange);
+      transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z), speedRange * Time.timeScale);
     }
     else if (!isAttacking && Vector3.Distance(transform.position, player.transform.position) <= attackRange)
     {
